@@ -1,0 +1,38 @@
+.p-header{
+    color: #2C3341;
+    text-decoration: none
+}
+.p-header:hover{
+    color: black;
+    text-decoration: underline
+}
+
+.h-title{
+    color: #2d3142;
+    font-size: 15rem;
+    font-weight: bold
+}
+
+.btn-orange{
+    background-color: #ef8354;
+    border-color: #ef8354;
+    color: white
+}
+.btn-orange:hover {
+    background-color: #EC6A32;
+    border-color: #EC6A32;
+}
+.btn-logout {
+    color: #2C3341;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    color: black;
+    text-decoration: underline;
+}

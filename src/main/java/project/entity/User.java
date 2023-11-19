@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.entity.enums.Role;
+//import project.entity.enums.Role;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -38,8 +38,8 @@ public class User{
     @Column(name = "created_date", nullable = false)
     private Date date;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+//    @Column(nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
 
 }

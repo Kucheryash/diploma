@@ -25,6 +25,9 @@ public class KPIAnalyse {
     @Column(nullable = false, name = "overall_profit")
     private int profit;
 
+    @Column(name = "created_date", nullable = false)
+    private Date date;
+
     @OneToOne
     @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_kpi_company"))
     private Company company;

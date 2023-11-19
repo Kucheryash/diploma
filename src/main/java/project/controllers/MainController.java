@@ -9,26 +9,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import project.entity.Company;
 import project.entity.User;
-import project.repository.CompanyRepository;
 import project.repository.UserRepository;
+import project.service.CompanyService;
 import project.service.UserService;
 
 import java.util.Optional;
 
 @Controller
 public class MainController {
-//    #2C3341
-//    #4F5D75
-//    #CBCDCD
-//    #D4B5A7
-//    #EC6A32
     @Autowired
     UserService userService;
+    @Autowired
+    CompanyService companyService;
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private CompanyRepository companyRepository;
 
     @GetMapping("/")
     public String home(){
@@ -38,6 +33,7 @@ public class MainController {
     @GetMapping("/home/{id}")
     public String loginHome(Model model, @PathVariable("id") long id){
         model.addAttribute("user", userService.get(id));
+        model.addAttribute("company", companyService.fingByBA(id));
         return "home";
     }
 
@@ -76,5 +72,25 @@ public class MainController {
             return "registration";
         }
     }
+
+    @GetMapping("/prices")
+    public String prices(){
+        return "prices";
+    }
+
+//    @Autowired
+//    AnalysisService analysisService;
+//    @GetMapping("/analysis")
+//    public String showAnalysis(Model model) {
+//        // Получите данные для графиков
+//        List<Double> revenueData = Arrays.asList(1000.0, 2000.0, 1500.0, 3000.0, 2500.0);
+//        List<String> labels = Arrays.asList("Q1", "Q2", "Q3", "Q4", "Q5");
+//
+//        // Передайте данные в модель Thymeleaf
+//        model.addAttribute("revenueData", revenueData);
+//        model.addAttribute("labels", labels);
+//
+//        return "charts";
+//    }
 
 }

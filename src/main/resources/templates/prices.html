@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Мимо</title>
+    <title>Prices</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
@@ -13,11 +13,12 @@
     <link rel="stylesheet" th:href="@{/styles/style.css}">
 
 </head>
-<body>
+<body th:object="${user}">
+<header th:insert="~{fragments/header :: header}"></header>
 <div class="container" style="height: 80vh">
     <br/><br/>
-    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Вы куда-то не туда жмали...</h2>
-    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Выйдете и зайдите нормально.</h2>
+    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Поздравляем! Вам очень повезло!</h2>
+    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Ведь Вы можете воспользоваться этим сервисом абсолютно БЕСПЛАТНО!</h2>
 </div>
 
 <footer th:insert="~{fragments/footer :: footer}"></footer>

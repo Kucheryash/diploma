@@ -12,3 +12,4 @@ function checkPasswordValidity() {
         input.setCustomValidity("");
     }
 }
+

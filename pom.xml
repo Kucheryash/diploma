@@ -29,21 +29,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-            <!-- Temporary explicit version to fix Thymeleaf bug -->
-            <version>3.1.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.thymeleaf.extras</groupId>-->
+<!--            <artifactId>thymeleaf-extras-springsecurity6</artifactId>-->
+<!--            &lt;!&ndash; Temporary explicit version to fix Thymeleaf bug &ndash;&gt;-->
+<!--            <version>3.1.1.RELEASE</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>javax.validation</groupId>-->
+<!--            <artifactId>validation-api</artifactId>-->
+<!--            <version>2.0.1.Final</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
+<!--        <dependency>-->
+<!--            <groupId>org.deeplearning4j</groupId>-->
+<!--            <artifactId>deeplearning4j-core</artifactId>-->
+<!--            <version>1.0.0-M2.1</version>-->
+<!--        </dependency>-->
+
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -64,11 +72,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-test</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

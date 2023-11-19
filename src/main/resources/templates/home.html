@@ -4,9 +4,12 @@
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>AssessIT</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="icon" th:href="@{../../images/icon.png}" type="image/x-icon">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/styles/style.css}">
 
 </head>
@@ -14,21 +17,116 @@
 <body th:object="${user}">
 <header th:insert="~{fragments/header :: header}"></header>
 
-<section>
+<section class="p-section">
     <div class="container text-center">
         <h1 class="h-title">ASSESSIT</h1>
         <p class="lead mb-4">Empower your IT competitiveness</p>
 <!--            <p class="lead mb-4">Делайте свою конкурентоспособность сильнее</p>-->
     </div>
 </section>
-<section class="bg-light py-5">
-    <div class="text-center" style="background-color: #2d3142; padding-top: 20px; padding-bottom: 20px">
-        <h1 style="color: white; font-size: 50px">Ready to Rule the IT Industry?</h1>
-        <p style="color: white">All it takes is a few simple steps, and the world is yours to conquer. Don’t be left behind, join AssessIT today for amazing insights!</p>
-        <button class="btn btn-light btn-orange" type="submit">Приступим</button>
+<section class="font-cyrillic p-section">
+    <div class="container align-items-center" style="padding-right: 200px; padding-left: 200px">
+        <h1 style="text-align: center">Улучшайте свою конкурентоспособность вместе с AssessIT</h1>
+        <div class="row align-items-center" style="padding-top: 40px">
+            <div class="col">
+                <p>Добро пожаловать в AssessIT, где мы анализируем и прогнозируем конкурентоспособность IT-компаний на оживленном рынке продуктов и услуг. Оставайтесь впереди игры, загружая данные вашей компании и сравнивая их с гигантами рынка!</p>
+            </div>
+            <div class="col">
+                <p>Наша передовая платформа помогает вам выявить ваши сильные и слабые стороны, предоставляя вам необходимые инсайты для стратегического развития и экспоненциального роста. Так чего же вы ждете? Начните с AssessIT и не оглядывайтесь назад!</p>
+            </div>
+        </div>
     </div>
 </section>
-
+<section class="font-cyrillic">
+    <div class="text-center p-section" style="background-color: #2d3142; display: flex; align-items: center; flex-direction: column;">
+        <h1 style="color: white; font-size: 50px; padding-bottom: 20px">Готовы стать лидером в IT-индустрии?</h1>
+        <p style="color: white; max-width: 650px; padding-bottom: 20px">Вам понадобятся всего несколько простых шагов, и весь мир будет у ваших ног. Не оставайтесь в отстающих, присоединяйтесь к AssessIT уже сегодня, чтобы получить потрясающие инсайты!</p>
+        <form  th:method="get" th:if="${user==null}" th:action="@{/login}">
+            <button class="btn btn-light btn-orange" type="submit">Начнём</button>
+        </form>
+        <form  th:method="get" th:if="${user!=null}" th:action="@{/analysis}">
+            <button class="btn btn-light btn-orange" type="submit">Проверить конкурентоспособность</button>
+        </form>
+    </div>
+</section>
+<section class="p-section font-cyrillic">
+    <div class="container" style="padding-left: 200px; padding-right: 200px">
+        <div class="card" style="background-color: #f2f2f2; border-color: #f2f2f2">
+            <div class="row align-items-center m-0" style="height: 100px">
+                <div class="col align-items-center" style="max-width: 100px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="@{/market}">
+                        <button type="submit" class="btn p-0 btn-orange" style="min-width: 90px; min-height: 90px">
+                            <i class="bi bi-bar-chart-line" style="font-size: 32px; color: #f2f2f2"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col text-left" style="min-width: 200px; display: flex; justify-content: center; flex-direction: column">
+                    <a class="p-header" th:href="@{/market}">
+                        <h4>Анализ IT-рынка</h4>
+                    </a>
+                    <p style="margin: 0">Просмотр компаний-конкурентов на рынке</p>
+                </div>
+                <div class="col text-end align-items-center" style="max-width: 60px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="@{/market}">
+                        <button type="submit" class="btn p-0">
+                            <i class="bi bi-chevron-right" style="font-size: 32px"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="card" style="background-color: #f2f2f2; border-color: #f2f2f2; margin: 0" th:object="${company}">
+            <div class="row align-items-center m-0" style="height: 100px">
+                <div class="col align-items-center" style="max-width: 100px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="${user == null ? '/login' : '/swot/' + company.getId()}">
+                        <button type="submit" class="btn p-0 btn-orange" style="min-width: 90px; min-height: 90px">
+                            <i class="bi bi-grid" style="font-size: 32px; color: #f2f2f2"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col text-left" style="min-width: 200px; display: flex; justify-content: center; flex-direction: column">
+                    <a class="p-header" th:href="${user == null ? '/login' : '/swot/' + company.getId()}">
+                        <h4>SWOT-анализ</h4>
+                    </a>
+                    <p style="margin: 0">Анализ сильных и слабых сторон компании</p>
+                </div>
+                <div class="col text-end align-items-center" style="max-width: 60px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="${user == null ? '/login' : '/swot/' + company.getId()}">
+                        <button type="submit" class="btn p-0">
+                            <i class="bi bi-chevron-right" style="font-size: 32px"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="card" style="background-color: #f2f2f2; border-color: #f2f2f2">
+            <div class="row align-items-center m-0" style="height: 100px">
+                <div class="col align-items-center" style="max-width: 100px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="${user == null ? '/login' : '/plan'}">
+                        <button type="submit" class="btn p-0 btn-orange" style="min-width: 90px; min-height: 90px">
+                            <i class="bi bi-list-ul" style="font-size: 32px; color: #f2f2f2"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col text-left" style="min-width: 200px; display: flex; justify-content: center; flex-direction: column">
+                    <a class="p-header" th:href="${user == null ? '/login' : '/plan'}">
+                        <h4>Стратегический план</h4>
+                    </a>
+                    <p style="margin: 0">Разработка стратегического плана компании</p>
+                </div>
+                <div class="col text-end align-items-center" style="max-width: 60px; display: flex; justify-content: center">
+                    <form th:method="get" th:action="${user == null ? '/login' : '/plan'}">
+                        <button type="submit" class="btn p-0">
+                            <i class="bi bi-chevron-right" style="font-size: 32px"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <footer th:insert="~{fragments/footer :: footer}"></footer>
 </body>
 </html>

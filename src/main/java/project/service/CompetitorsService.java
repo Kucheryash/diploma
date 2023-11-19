@@ -6,21 +6,19 @@ import org.springframework.transaction.annotation.Transactional;
 import project.entity.Competitors;
 import project.repository.CompetitorsRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class CompetitorsService {
     @Autowired
     CompetitorsRepository repo;
 
-    public void save(Competitors competitor){
-        repo.save(competitor);
+    public List<Object[]> getRevAndEmpNotNull(){
+        return repo.findAllNotNullFields();
     }
 
     public Competitors get(Long id) {
         return repo.findById(id).get();
-    }
-
-    public void delete(Long id) {
-        repo.deleteById(id);
     }
 }

@@ -56,3 +56,8 @@
     color: #ef8354;
     text-decoration: none
 }
+
+/*.table-responsive {*/
+/*    height: 400px; !* Задайте желаемую высоту контейнера *!*/
+/*    overflow-y: auto; !* Включите вертикальную полосу прокрутки *!*/
+/*}*/

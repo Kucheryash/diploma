@@ -13,3 +13,7 @@ function checkPasswordValidity() {
     }
 }
 
+$(document).ready(function() {
+    $('.table').DataTable();
+});
+

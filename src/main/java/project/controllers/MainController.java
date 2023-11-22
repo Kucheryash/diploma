@@ -74,7 +74,13 @@ public class MainController {
     }
 
     @GetMapping("/prices")
-    public String prices(){
+    public String prices(@ModelAttribute("user") User user){
+        return "prices";
+    }
+
+    @GetMapping("/prices/{id}")
+    public String pricesForUser(Model model, @PathVariable("id") long id){
+        model.addAttribute("user", userService.get(id));
         return "prices";
     }
 

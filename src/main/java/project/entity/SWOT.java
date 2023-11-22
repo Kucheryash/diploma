@@ -19,16 +19,16 @@ public class SWOT {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65535)
     private String strengths;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65535)
     private String weaknesses;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65535)
     private String opportunities;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 65535)
     private String threats;
 
     @Column(nullable = false, name = "creation_date")

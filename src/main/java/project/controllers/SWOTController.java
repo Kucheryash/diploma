@@ -32,12 +32,13 @@ public class SWOTController {
     @Autowired
     CompanyDataService companyDataService;
 
-    @GetMapping("/swot/{id}") //Источник: CNews Analytics, 2023
+    @GetMapping("/swot/{id}")
     public String swot(Model model, @PathVariable("id") long id_company){
         CompanyData companyData = companyDataService.find(id_company);
         Company company = companyService.get(id_company);
         User user = company.getUser();
         SWOT analysis = swotService.SWOTAnalysis(companyData.getRevenue(), companyData.getEmployees(), companyData.getCompany());
+        swotService.save(analysis);
         model.addAttribute("user", user);
         model.addAttribute("company", company);
         model.addAttribute("swot", analysis);

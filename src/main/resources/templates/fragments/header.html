@@ -16,7 +16,7 @@
         </div>
 
         <div class="col-md-3 text-end" th:if="${user!=null}">
-            <a class="p-header" style="margin-right: 5px" th:href="@{/prices}">Цены</a>
+            <a class="p-header" style="margin-right: 5px" th:href="@{/prices/{id}(id=${user.getId()})}">Цены</a>
             <a class="p-header" style="margin-right: 5px" th:href="@{/account/{id}(id=${user.getId()})}">Личный кабинет</a>
             <form th:action="@{/logout}" method="post" style="display: inline-block;">
                 <a class="p-header" style="color: #4F5D75" type="submit">Выйти</a>

@@ -27,7 +27,7 @@
 //        http
 //                .authorizeHttpRequests((requests) -> requests
 //                        .requestMatchers("/", "/static/**","/static/styles/**", "/static/images/**", "/singin", "/reg", "/registration/**", "/home/**", "/login/**").permitAll()
-////                        .requestMatchers("/home/{id}/**").hasRole("ROLE_BA")
+////                        .requestMatchers("/home/{id}/**").hasRole("BA")
 //                        .anyRequest().authenticated()
 //                )
 //                .formLogin((form) -> form

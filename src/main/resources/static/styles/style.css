@@ -27,6 +27,24 @@
     background-color: #EC6A32;
     border-color: #EC6A32;
 }
+
+.btn-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #ef8354;
+    color: white;
+    border: 1px solid #ef8354;
+    text-decoration: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.btn-link:hover {
+    background-color: #EC6A32;
+    border-color: #EC6A32;
+    color: black;
+}
+
 .btn-logout {
     color: #2C3341;
     text-decoration: none;
@@ -57,7 +75,42 @@
     text-decoration: none
 }
 
-/*.table-responsive {*/
-/*    height: 400px; !* Задайте желаемую высоту контейнера *!*/
-/*    overflow-y: auto; !* Включите вертикальную полосу прокрутки *!*/
-/*}*/
+#topBtn {
+    display: none;
+    position: fixed;
+    font-size: 24px;
+    align-items: center;
+    font-weight: bold;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #cbcdcd;
+    color: white;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+#topBtn:hover {
+    background-color: #ef8354;
+    color: white;
+}
+
+.section-content {
+    display: none;
+}
+
+.chevron-compact-down-icon {
+    transform: rotate(180deg);
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 5px;
+}
+.checkbox-list {
+    column-count: 2;
+}

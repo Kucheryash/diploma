@@ -20,43 +20,79 @@
 
 <body th:object="${user}">
 <header th:insert="~{fragments/header :: header}"></header>
+<button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
 
-<section class="text-center font-cyrillic p-section" style="background-color: #2d3142">
-    <h1 class="text-center" style="color: white; font-weight: bold">Личный кабинет</h1>
-</section>
-<section class="text-center" style="margin-top: 100px">
-    <img src="../images/logo.png" alt="Logo" width="80" height="80">
-</section>
-<section class="font-cyrillic p-section">
-    <div class="container align-items-center" style="padding-right: 200px; padding-left: 200px">
-        <div class="row align-items-center" style="padding-top: 40px">
-            <div class="col">
-                <form method="POST" action="/update-company">
-                    <div class="mb-3">
-                        <label for="company-name" class="form-label">Название компании</label>
-                        <input type="text" class="form-control" id="company-name" name="companyName" required>
+<div th:object="${company}">
+<div th:object="${companyData}">
+    <section class="text-center font-cyrillic p-section" style="background-color: #2d3142">
+        <p style="margin: 0; color: #f2f2f2; font-weight: bold">Личный кабинет</p>
+        <h1 class="text-center" style="color: white; font-weight: bold; margin-top: 18px; margin-bottom: 18px" th:object="${greeting}">
+            <span th:text="${greeting}">Здравствуйте</span>,
+            <span class="text-capitalize" th:text="${user.getFirstname()}">Имя</span>!
+        </h1>
+        <p style="margin: 0; color: #f2f2f2">Редактировать личные данные</p>
+    </section>
+    <section class="text-center" style="margin-top: 100px">
+        <img src="../images/logo.png" alt="Logo" width="80" height="80">
+    </section>
+    <section class="font-cyrillic p-section" style="padding-top: 70px" th:if="${companyData.getCompany()!=company}">
+        <h2 class="text-center">Заполните данные компании "<span th:text="${company.getName()}">Название компании</span>"</h2>
+        <h2 class="text-center">для дальнейшей работы.</h2>
+        <br/>
+        <div class="container" style="max-width: 450px; padding-top: 20px">
+            <form method="get" th:action="@{/go-to-company-data/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
+                <div class="text-center">
+                    <button class="btn btn-lg btn-light btn-orange" style="width: 300px" type="submit">Добавить данные</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section class="font-cyrillic p-section align-items-center" th:if="${companyData.getCompany()==company}">
+        <h2 class="text-center">Данные компании "
+            <span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"
+        </h2>
+        <br/>
+        <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px" th:object="${swot}">
+            <a id="swotButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">SWOT-анализ<i id="swotIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
+            <div id="swotContent" class="section-content container" style="padding-left: 200px; padding-right: 200px">
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 style="color: #2d3142; font-weight: bold">Сильные стороны (Strengths)</h5>
+                        <p th:inline="text" th:each="strengths : ${swot.getStrengths().split('\n')}" th:text="${strengths}" style="margin-bottom: 8px"></p>
                     </div>
-                    <div class="mb-3">
-                        <label for="revenue" class="form-label">Годовой доход</label>
-                        <input type="number" class="form-control" id="revenue" name="revenue" required>
+                    <div class="col-md-6">
+                        <h5 style="color: #2d3142; font-weight: bold">Слабые стороны (Weaknesses)</h5>
+                        <p th:inline="text" th:each="weakness : ${swot.getWeaknesses().split('\n')}" th:text="${weakness}" style="margin-bottom: 8px"></p>
                     </div>
-                    <div class="mb-3">
-                        <label for="employees" class="form-label">Количество сотрудников</label>
-                        <input type="number" class="form-control" id="employees" name="employees" required>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <h5 style="color: #2d3142; font-weight: bold">Возможности (Opportunities)</h5>
+                        <p th:inline="text" th:each="opportunities : ${swot.getOpportunities().split('\n')}" th:text="${opportunities}" style="margin-bottom: 8px"></p>
                     </div>
-                    <button type="submit" class="btn btn-primary">Добавить данные</button>
-                </form>
+                    <div class="col-md-6">
+                        <h5 style="color: #2d3142; font-weight: bold">Угрозы (Threats)</h5>
+                        <p th:inline="text" th:each="threats : ${swot.getThreats().split('\n')}" th:text="${threats}" style="margin-bottom: 8px"></p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row align-items-center" style="padding-top: 40px">
-            <div class="col">
-                <form method="POST" action="/delete-account">
-                    <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
+        <br/>
+        <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px">
+            <a id="competitorButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Анализ конкурентоспособности<i id="competitorIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
+            <div id="competitorContent" class="section-content container">
+                <form class="text-center" th:object="${competitiveness}" th:if="${competitiveness==null}">
+                    <p>Упс... Вы ещё не проводили данный анализ Вашей компании.</p>
+                    <br/>
+                    <button class="btn btn-lg btn-light btn-orange" style="width: 300px" type="submit">Выполнить анализ</button>
                 </form>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
+</div>
 <footer th:insert="~{fragments/footer :: footer}"></footer>
 </body>
 </html>

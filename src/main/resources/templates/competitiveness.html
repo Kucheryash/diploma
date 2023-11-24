@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Анализ конкурентоспособности</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="icon" th:href="@{../../images/icon.png}" type="image/x-icon">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>-->
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">-->
+<!--    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>-->
+    <link rel="stylesheet" href="/styles/style.css">
+    <script src="../../styles/script.js"></script>
+
+</head>
+
+<body th:object="${user}">
+<header th:insert="~{fragments/header :: header}" style="margin: 0"></header>
+<button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
+
+<div th:object="${company}">
+    <section class="p-section" style="background-color: #2d3142">
+        <div class="container text-center font-cyrillic" style="max-width: 800px">
+            <h1 style="color: white; font-weight: bold">Анализ конкурентоспособности компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
+            <br/>
+            <p class="mb-4" style="color: white">Оценка позиции компании относительно конкурентов и выявление стратегий для улучшения её конкурентного положения на рынке</p>
+        </div>
+    </section>
+    <div th:object="${swot}">
+        <section class="p-section" style="background-color: #4F5D75">
+            <div class="container text-center font-cyrillic">
+                <h1 style="color: white; font-weight: bold">SWOT-анализ компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
+                <br/>
+                <p class="mb-4" style="color: white">Анализ сильных и слабых сторон</p>
+            </div>
+        </section>
+        <section class="text-center" style="margin-top: 50px">
+            <img src="../../images/logo.png" alt="Logo" width="80" height="80">
+        </section>
+        <section class="font-cyrillic p-section" style="padding-top: 50px">
+            <div class="container align-items-center" style="padding-right: 200px; padding-left: 200px">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 style="color: #4F5D75; font-weight: bold">Сильные стороны (Strengths)</h2>
+                        <p th:inline="text" th:each="strengths : ${swot.getStrengths().split('\n')}" th:text="${strengths}" style="margin-bottom: 8px"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 style="color: #4F5D75; font-weight: bold">Слабые стороны (Weaknesses)</h2>
+                        <p th:inline="text" th:each="weakness : ${swot.getWeaknesses().split('\n')}" th:text="${weakness}" style="margin-bottom: 8px"></p>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <h2 style="color: #4F5D75; font-weight: bold">Возможности (Opportunities)</h2>
+                        <p th:inline="text" th:each="opportunities : ${swot.getOpportunities().split('\n')}" th:text="${opportunities}" style="margin-bottom: 8px"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 style="color: #4F5D75; font-weight: bold">Угрозы (Threats)</h2>
+                        <p th:inline="text" th:each="threats : ${swot.getThreats().split('\n')}" th:text="${threats}" style="margin-bottom: 8px"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:object="${competitivenessList}">
+        <section class="p-section" style="background-color: #4F5D75">
+            <div class="container text-center font-cyrillic">
+                <h1 style="color: white; font-weight: bold">Оценка конкурентоспособности компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
+                <br/>
+                <p class="mb-4" style="color: white">Анализ рыночной доли компании</p>
+            </div>
+        </section>
+        <section class="text-center" style="margin-top: 50px">
+            <img src="../../images/logo.png" alt="Logo" width="80" height="80">
+        </section>
+        <section class="p-section align-items-center" style="padding-top: 50px">
+            <div style="padding-left: 300px; padding-right: 300px">
+            <table>
+                <tr style="background-color: #f2f2f2">
+                    <th>Выручка компании, USD</th>
+                    <th>Штатная численность сотрудников</th>
+                    <th>Рост выручки, %</th>
+                    <th>Рентабельность компании, %</th>
+                    <th>Рыночная доля, %</th>
+                    <th>Сфера деятельности</th>
+                </tr>
+                <tr th:each="competitiveness : ${competitivenessList}">
+                    <td th:text="${competitiveness.revenue}"></td>
+                    <td th:text="${competitiveness.employees}"></td>
+                    <td th:text="${competitiveness.revenueGrowth}"></td>
+                    <td th:text="${competitiveness.profitability}"></td>
+                    <td th:text="${competitiveness.marketShare}"></td>
+                    <td th:text="${competitiveness.activity}"></td>
+                </tr>
+            </table>
+            </div>
+        </section>
+    </div>
+
+    <div th:object="${forecast}">
+        <section class="p-section" style="background-color: #4F5D75">
+            <div class="container text-center font-cyrillic">
+                <h1 style="color: white; font-weight: bold">Прогноз конкурентоспособности компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
+                <br/>
+                <p class="mb-4" style="color: white">Возможное будущее положение компании на рынке</p>
+            </div>
+        </section>
+        <section class="text-center" style="margin-top: 50px">
+            <img src="../../images/logo.png" alt="Logo" width="80" height="80">
+        </section>
+        <section class="p-section align-items-center" style="padding-top: 50px">
+            <div style="padding-left: 300px; padding-right: 300px">
+
+            </div>
+        </section>
+    </div>
+
+    <div th:object="${plan}">
+        <section class="p-section" style="background-color: #4F5D75">
+            <div class="container text-center font-cyrillic">
+                <h1 style="color: white; font-weight: bold">Прогноз конкурентоспособности компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
+                <br/>
+                <p class="mb-4" style="color: white">Возможное будущее положение компании на рынке</p>
+            </div>
+        </section>
+        <section class="text-center" style="margin-top: 50px">
+            <img src="../../images/logo.png" alt="Logo" width="80" height="80">
+        </section>
+        <section class="p-section align-items-center" style="padding-top: 50px">
+            <div style="padding-left: 300px; padding-right: 300px">
+
+            </div>
+        </section>
+    </div>
+</div>
+</div>
+<footer th:insert="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
+

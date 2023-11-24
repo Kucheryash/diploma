@@ -86,7 +86,7 @@ public class MainController {
 
 //    @Autowired
 //    AnalysisService analysisService;
-//    @GetMapping("/analysis")
+//    @GetMapping("/charts")
 //    public String showAnalysis(Model model) {
 //        // Получите данные для графиков
 //        List<Double> revenueData = Arrays.asList(1000.0, 2000.0, 1500.0, 3000.0, 2500.0);

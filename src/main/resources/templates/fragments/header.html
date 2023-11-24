@@ -2,10 +2,10 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-4 border-bottom" style="padding-left: 10px; padding-right: 20px">
         <div class="d-flex align-items-center">
             <a class="navbar-brand" style="padding: 0" th:if="${user==null}" th:href="@{/}">
-                <img src="../images/logo.png" alt="Logo" width="50" height="50">
+                <img src="../../images/logo.png" alt="Logo" width="50" height="50">
             </a>
             <a class="navbar-brand" style="padding: 0" th:if="${user!=null}" th:href="@{/home/{id}(id=${user.getId()})}">
-                <img src="../images/logo.png" alt="Logo" width="50" height="50">
+                <img src="../../images/logo.png" alt="Logo" width="50" height="50">
             </a>
             <p class="p-header" style="font-size: 20px; font-weight: bold; margin: 0">AssessIT</p>
         </div>

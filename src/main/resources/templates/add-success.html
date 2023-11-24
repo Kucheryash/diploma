@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Цены</title>
+    <title>Успешно</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
@@ -17,10 +17,17 @@
 <header th:insert="~{fragments/header :: header}"></header>
 <button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
 
-<div class="container" style="height: 80vh">
+<div class="container text-center" style="height: 80vh" th:object="${company}">
     <br/><br/>
-    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Поздравляем! Вам очень повезло!</h2>
-    <h2 class="font-cyrillic" style="text-align: center; color: #2d3142">Ведь Вы можете воспользоваться этим сервисом абсолютно БЕСПЛАТНО!</h2>
+    <h2 class="font-cyrillic" style="color: #2d3142; font-weight: bold">Информация о компании "<span th:text="${company.getName()}">Название компании</span>"успешно добавлена!</h2>
+    <br/><br/>
+    <a class="btn-link" style="width: 350px" th:href="@{/account/{id}(id=${user.getId()})}">Перейти в личный кабинет</a>
+    <br/><br/>
+    <form method="post" th:action="@{/analysis/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
+        <div class="text-center">
+            <button class="btn btn-lg btn-light btn-orange" style="width: 500px" type="submit">Перейти к анализу конкурентоспособности</button>
+        </div>
+    </form>
 </div>
 
 <footer th:insert="~{fragments/footer :: footer}"></footer>

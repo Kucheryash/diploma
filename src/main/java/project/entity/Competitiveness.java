@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity(name = "competitiveness")
@@ -19,11 +20,23 @@ public class Competitiveness {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "income_growth")
-    private int income;
+    @Column(nullable = false)
+    private int revenue;
+
+    @Column(nullable = false, name = "num_of_employees")
+    private int employees;
+
+    @Column(nullable = false, name = "field_of_activity")
+    private String activity;
+
+    @Column(nullable = false, name = "revenue_growth")
+    private double revenueGrowth;
+
+    @Column(nullable = false)
+    private double profitability;
 
     @Column(nullable = false, name = "market_share")
-    private int share;
+    private double marketShare;
 
     @Column(nullable = false, name = "creation_date")
     private Date date;

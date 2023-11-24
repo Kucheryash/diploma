@@ -13,7 +13,37 @@ function checkPasswordValidity() {
     }
 }
 
+// When the user scrolls down 400px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+        document.getElementById("topBtn").style.display = "block";
+    } else {
+        document.getElementById("topBtn").style.display = "none";
+    }
+}
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
 $(document).ready(function() {
-    $('.table').DataTable();
+    $("#swotButton").click(function() {
+        $("#swotContent").slideToggle();
+        $("#swotIcon").toggleClass("chevron-compact-down-icon");
+    });
+
+    $("#competitorButton").click(function() {
+        $("#competitorContent").slideToggle();
+        $("#competitorIcon").toggleClass("chevron-compact-down-icon");
+    });
+});
+$(document).ready(function() {
+    $(".section-content").hide();
 });
 
+// $(document).ready(function() {
+//     $('.dataTable').DataTable();
+// });

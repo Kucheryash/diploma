@@ -8,6 +8,8 @@ import project.entity.CompanyData;
 import project.entity.User;
 import project.repository.CompanyDataRepository;
 
+import java.sql.Date;
+
 @Service
 @Transactional
 public class CompanyDataService {
@@ -21,6 +23,14 @@ public class CompanyDataService {
         Company company = companyService.get(id_company);
         CompanyData companyData = new CompanyData();
         companyData = repo.findByCompany(company);
+        return companyData;
+    }
+
+    public CompanyData fillIn(CompanyData companyData, Company company){
+        Date date = Date.valueOf(java.time.LocalDate.now());
+        companyData.setDate(date);
+        companyData.setCompany(company);
+        save(companyData);
         return companyData;
     }
 

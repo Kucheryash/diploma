@@ -37,7 +37,7 @@ public class SWOTController {
         CompanyData companyData = companyDataService.find(id_company);
         Company company = companyService.get(id_company);
         User user = company.getUser();
-        SWOT analysis = swotService.SWOTAnalysis(companyData.getRevenue(), companyData.getEmployees(), companyData.getCompany());
+        SWOT analysis = swotService.SWOTAnalysis(companyData.getRevenue22(), companyData.getEmployees22(), companyData.getCompany());
         swotService.save(analysis);
         model.addAttribute("user", user);
         model.addAttribute("company", company);

@@ -133,6 +133,10 @@ public class SWOTService {
         return threats.trim();
     }
 
+    public SWOT findByCompany(Company company){
+        return repo.findByCompany(company);
+    }
+
     public void save(SWOT swot){
         repo.save(swot);
     }

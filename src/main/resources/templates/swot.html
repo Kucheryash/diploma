@@ -16,6 +16,8 @@
 
 <body th:object="${user}">
 <header th:insert="~{fragments/header :: header}" style="margin: 0"></header>
+<button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
+
 <div th:object="${company}">
 <div th:object="${swot}">
     <section class="p-section" style="background-color: #2d3142">
@@ -50,6 +52,12 @@
                     <p th:inline="text" th:each="threats : ${swot.getThreats().split('\n')}" th:text="${threats}" style="margin-bottom: 8px"></p>
                 </div>
             </div>
+            <br/><br/>
+            <form method="post" th:action="@{/analysis/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
+                <div class="text-center">
+                    <button class="btn btn-lg btn-light btn-orange" style="width: 500px" type="submit">Перейти к анализу конкурентоспособности</button>
+                </div>
+            </form>
         </div>
     </section>
 </div>

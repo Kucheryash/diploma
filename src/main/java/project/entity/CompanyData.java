@@ -20,10 +20,22 @@ public class CompanyData {
     private Long id;
 
     @Column(nullable = false)
-    private int revenue;
+    private int revenue22;
 
-    @Column(nullable = false, name = "num_of_employees")
-    private int employees;
+    @Column(nullable = false)
+    private int revenue21;
+
+    @Column(nullable = false)
+    private int profit22;
+
+    @Column(nullable = false, name = "num_of_employees22")
+    private int employees22;
+
+    @Column(nullable = false, name = "num_of_employees21")
+    private int employees21;
+
+    @Column(nullable = false, name = "field_of_activity")
+    private String activity;
 
     @Column(nullable = false, name = "creation_date")
     private Date date;

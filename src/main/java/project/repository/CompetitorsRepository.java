@@ -17,4 +17,7 @@ public interface CompetitorsRepository extends JpaRepository<Competitors, Long> 
 
      @Query("SELECT c.revenue22 FROM competitors c WHERE c.revenue22 IS NOT NULL")
      List<Object> findRevenue22Values();
+
+     @Query("SELECT c.growthRev FROM competitors c WHERE c.growthRev IS NOT NULL")
+     List<Object> findRevenueGrowthValues();
 }

@@ -3,9 +3,7 @@ package project.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import project.entity.*;
 import project.service.*;
 
@@ -55,6 +53,24 @@ public class UserController {
             model.addAttribute("competitiveness", competitiveness);
         }
         return "account";
+    }
+
+    @PostMapping("/send-email/{id}")
+    public String email(Model model, @RequestParam("phone") String phone, @PathVariable("id") Long id) {
+        userService.sendEmail(phone);
+
+        User user = userService.get(id);
+        Company company = companyService.fingByBA(id);
+        CompanyData companyData = dataService.find(company.getId());
+        SWOT swot = swotService.SWOTAnalysis(companyData.getRevenue22(), companyData.getEmployees22(), companyData.getCompany());
+        Competitiveness competitiveness = competitivenessService.findByCompany(company);
+        model.addAttribute("user", user);
+        model.addAttribute("company", company);
+        model.addAttribute("companyData", companyData);
+        model.addAttribute("swot", swot);
+        model.addAttribute("competitivenessList", competitiveness);
+        model.addAttribute("successMessage", "Отправлено");
+        return "competitiveness";
     }
 
 }

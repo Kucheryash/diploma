@@ -1,14 +1,13 @@
 package project.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import project.entity.*;
 import project.service.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -37,13 +36,22 @@ public class CompetitivenessController {
         if (swot==null)
             return "redirect:/swot/"+id_company;
 
-        Competitiveness competitiveness = competitivenessService.makeAnalisys(company);
+        Competitiveness competitiveness = competitivenessService.findByCompany(company);
+        if (competitiveness==null)
+            competitiveness = competitivenessService.makeAnalisys(company);
+
+        List<Double> forecastRevComp = competitivenessService.makeForecastRevCompany(competitiveness);
+        List<Double> forecastRevMarket = competitivenessService.makeForecastRevMarket();
+        List<Double> forecastMarketShare = competitivenessService.makeForecastMarketShare(competitiveness);
 
         model.addAttribute("user", user);
         model.addAttribute("swot", swot);
         model.addAttribute("company", company);
         model.addAttribute("companyData", companyData);
         model.addAttribute("competitivenessList", competitiveness);
+        model.addAttribute("forecastRevComp", forecastRevComp);
+        model.addAttribute("forecastRevMarket", forecastRevMarket);
+        model.addAttribute("forecastMarketShare", forecastMarketShare);
         return "competitiveness";
     }
 }

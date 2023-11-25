@@ -124,9 +124,6 @@ public class SWOTService {
         if (profit<market_profit && employeeCount<market_employee)
             threats += "Ограниченные ресурсы.\nСнижение мотивации сотрудников (недостаточное количество сотрудников может привести к перегрузке работы и выгоранию сотрудников)";
 
-//        if (profit>market_profit && employeeCount<market_employee)
-//            threats += "Перегрузка работы. Ограниченное количество сотрудников может не справиться с растущим объемом работы.\n";
-
         if (profit/employeeCount < (double) market_profit /market_employee)
             threats += "Недостаток прибыльности по сравнению с другими компаниями на рынке может указывать на проблемы в эффективности и производительности компании.\n";
 

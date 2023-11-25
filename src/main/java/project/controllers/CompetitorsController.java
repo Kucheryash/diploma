@@ -5,12 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import project.entity.Market;
 import project.entity.User;
 import project.service.CompetitorsService;
 import project.service.UserService;
-
-import java.util.List;
 
 @Controller
 public class CompetitorsController {

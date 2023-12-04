@@ -1,0 +1,4 @@
+#POST http://localhost:8080/new-company-data/3/1
+
+GET http://localhost:8080/swot/2
+

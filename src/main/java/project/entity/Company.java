@@ -22,16 +22,17 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ba_id", nullable = false, foreignKey = @ForeignKey(name = "fk_company_ba"))
     private User user;
 
-    @OneToMany(mappedBy= "company")
+    @OneToMany(mappedBy= "company", cascade = CascadeType.ALL)
     private List<CompanyData> data;
 
-    @OneToMany(mappedBy= "company")
+    @OneToMany(mappedBy= "company", cascade = CascadeType.ALL)
     private List<SWOT> swots;
 
-    @OneToMany(mappedBy= "company")
+    @OneToMany(mappedBy= "company", cascade = CascadeType.ALL)
     private List<Competitiveness> competitiveness;
+
 }

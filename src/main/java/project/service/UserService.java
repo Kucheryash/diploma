@@ -1,20 +1,14 @@
 package project.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Company;
 import project.entity.User;
-//import project.entity.enums.Role;
 import project.repository.CompanyRepository;
 import project.repository.UserRepository;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.sql.Date;
-import java.util.*;
 
 @Service
 @Transactional
@@ -25,8 +19,12 @@ public class UserService {
     CompanyRepository repoCompany;
 
 //    @Autowired
+//    CompanyService companyService;
+
+//    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
+    //speci@li.st
     public String newUser(User user, Company company) {
         String email = user.getEmail();
         String password = user.getPassword();
@@ -58,50 +56,46 @@ public class UserService {
         return repo.findByEmail(user.getEmail());
     }
 
-    public List<User> listAll() {
-        return (List<User>) repo.findAll();
-    }
-
     public void delete(Long id) {
         repo.deleteById(id);
     }
 
-    public void sendEmail(String phone) {
-        // Настройки для подключения к серверу Gmail
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
-        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-        // Учетные данные отправителя
-        final String senderEmail = "julaymyak@gmail.com";
-        final String senderPassword = "j08260716";
-
-        // Создание сессии
-        Session session = Session.getInstance(properties, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(senderEmail, senderPassword);
-            }
-        });
-        String specialistEmail = "julaymyak12@gmail.com";
-        String messageTopic = "Помощь с конкурентоспособностью компании.";
-        String messageContent = "Прошу помочь, вот номер: +" + phone;
-        try {
-            // Создание объекта MimeMessage
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(specialistEmail));
-            message.setSubject(messageTopic);
-            message.setText(messageContent);
-
-            // Отправка сообщения
-            Transport.send(message);
-
-            System.out.println("Письмо успешно отправлено!");
-        } catch (MessagingException e) {
-            System.out.println("Ошибка при отправке письма: " + e.getMessage());
-        }
-    }
+//    public void sendEmail(String phone) {
+//        // Настройки для подключения к серверу Gmail
+//        Properties properties = new Properties();
+//        properties.put("mail.smtp.auth", "true");
+//        properties.put("mail.smtp.starttls.enable", "true");
+//        properties.put("mail.smtp.host", "smtp.gmail.com");
+//        properties.put("mail.smtp.port", "587");
+//        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+//
+//        // Учетные данные отправителя
+//        final String senderEmail = "julaymyak@gmail.com";
+//        final String senderPassword = "j08260716";
+//
+//        // Создание сессии
+//        Session session = Session.getInstance(properties, new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication(senderEmail, senderPassword);
+//            }
+//        });
+//        String specialistEmail = "julaymyak12@gmail.com";
+//        String messageTopic = "Помощь с конкурентоспособностью компании.";
+//        String messageContent = "Прошу помочь, вот номер: +" + phone;
+//        try {
+//            // Создание объекта MimeMessage
+//            Message message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress(senderEmail));
+//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(specialistEmail));
+//            message.setSubject(messageTopic);
+//            message.setText(messageContent);
+//
+//            // Отправка сообщения
+//            Transport.send(message);
+//
+//            System.out.println("Письмо успешно отправлено!");
+//        } catch (MessagingException e) {
+//            System.out.println("Ошибка при отправке письма: " + e.getMessage());
+//        }
+//    }
 }

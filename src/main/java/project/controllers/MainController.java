@@ -84,19 +84,4 @@ public class MainController {
         return "prices";
     }
 
-//    @Autowired
-//    AnalysisService analysisService;
-//    @GetMapping("/charts")
-//    public String showAnalysis(Model model) {
-//        // Получите данные для графиков
-//        List<Double> revenueData = Arrays.asList(1000.0, 2000.0, 1500.0, 3000.0, 2500.0);
-//        List<String> labels = Arrays.asList("Q1", "Q2", "Q3", "Q4", "Q5");
-//
-//        // Передайте данные в модель Thymeleaf
-//        model.addAttribute("revenueData", revenueData);
-//        model.addAttribute("labels", labels);
-//
-//        return "charts";
-//    }
-
 }

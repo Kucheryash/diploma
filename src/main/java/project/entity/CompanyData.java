@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity(name = "comp_data")
 @AllArgsConstructor
@@ -40,8 +41,14 @@ public class CompanyData {
     @Column(nullable = false, name = "creation_date")
     private Date date;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_data_company"))
     private Company company;
+
+    @OneToMany(mappedBy= "data", cascade = CascadeType.ALL)
+    private List<Charts> charts;
+
+    @OneToMany(mappedBy= "data", cascade = CascadeType.ALL)
+    private List<ForecastData> forecast;
 
 }

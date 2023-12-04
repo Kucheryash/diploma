@@ -27,11 +27,12 @@ public class CompanyService {
         repo.save(company);
     }
 
+    public Company findByName(String name){
+        return repo.findByName(name);
+    }
+
     public Company get(Long id) {
         return repo.findById(id).get();
     }
 
-    public void delete(Long id) {
-        repo.deleteById(id);
-    }
 }

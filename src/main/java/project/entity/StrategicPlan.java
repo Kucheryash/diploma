@@ -25,7 +25,10 @@ public class StrategicPlan {
     @Column(nullable = false, name = "creation_date")
     private Date date;
 
-    @OneToOne
+    @Column(nullable = false)
+    private String status;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_plan_company"))
     private Company company;
 }

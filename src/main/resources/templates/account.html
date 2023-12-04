@@ -11,8 +11,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.js" integrity="sha512-6LKCH7i2+zMNczKuCT9ciXgFCKFp3MevWTZUXDlk7azIYZ2wF5LRsrwZqO7Flt00enUI+HwzzT5uhOvy6MNPiA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/styles/style.css">
     <script src="../styles/script.js"></script>
 
@@ -30,7 +31,7 @@
             <span th:text="${greeting}">Здравствуйте</span>,
             <span class="text-capitalize" th:text="${user.getFirstname()}">Имя</span>!
         </h1>
-        <p style="margin: 0; color: #f2f2f2">Редактировать личные данные</p>
+        <a class="p-header" style="margin: 0; color: #f2f2f2">Редактировать личные данные</a>
     </section>
     <section class="text-center" style="margin-top: 100px">
         <img src="../images/logo.png" alt="Logo" width="80" height="80">
@@ -48,10 +49,16 @@
         </div>
     </section>
     <section class="font-cyrillic p-section align-items-center" th:if="${companyData.getCompany()==company}">
-        <h2 class="text-center">Данные компании "
-            <span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"
-        </h2>
+    <h2 class="text-center">Анализ конкурентоспособности компании "
+        <span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"
+    </h2>
+    <br/>
+    <form class="text-center" method="post" th:object="${analysis}" th:if="${analysis==null}" th:action="@{/analysis/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
+        <h2>Упс... Вы ещё не проводили анализ конкурентоспособности Вашей компании.</h2>
         <br/>
+        <button class="btn btn-lg btn-light btn-orange" style="width: 300px" type="submit">Выполнить анализ</button>
+    </form>
+    <div th:object="${analysis}" th:if="${analysis!=null}">
         <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px" th:object="${swot}">
             <a id="swotButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">SWOT-анализ<i id="swotIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
             <div id="swotContent" class="section-content container" style="padding-left: 200px; padding-right: 200px">
@@ -82,14 +89,53 @@
         <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px">
             <a id="competitorButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Анализ конкурентоспособности<i id="competitorIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
             <div id="competitorContent" class="section-content container">
-                <form class="text-center" th:object="${competitiveness}" th:if="${competitiveness==null}">
-                    <p>Упс... Вы ещё не проводили данный анализ Вашей компании.</p>
-                    <br/>
-                    <button class="btn btn-lg btn-light btn-orange" style="width: 300px" type="submit">Выполнить анализ</button>
-                </form>
-
+                <br/>
+                <div style="padding-left: 300px; padding-right: 300px">
+                    <table>
+                        <tr style="background-color: #f2f2f2; border: 2px solid white">
+                            <th>Выручка компании, USD</th>
+                            <th>Штатная численность сотрудников</th>
+                            <th>Рост выручки, %</th>
+                            <th>Рентабельность компании, %</th>
+                            <th>Рыночная доля, %</th>
+                            <th>Сфера деятельности</th>
+                        </tr>
+                        <tr th:each="competitiveness : ${competitivenessList}" style="background-color: white">
+                            <td th:text="${competitiveness.revenue}"></td>
+                            <td th:text="${competitiveness.employees}"></td>
+                            <td th:text="${competitiveness.revenueGrowth}"></td>
+                            <td th:text="${competitiveness.profitability}"></td>
+                            <td th:text="${competitiveness.marketShare}"></td>
+                            <td th:text="${competitiveness.activity}"></td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <div class="row d-flex align-items-center justify-content-center" style="padding-left: 200px; padding-right: 200px; margin: 0">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <canvas id="revCompChart" width="400" height="350"></canvas>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <canvas id="marketShareChart" width="400" height="350"></canvas>
+                    </div>
+                    <script>
+                        var forecastRevComp = [[${forecastRevComp}]];
+                        var forecastRevMarket = [[${forecastRevMarket}]];
+                        var forecastMarketShare = [[${forecastMarketShare}]];
+                        initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShare);
+                    </script>
+                </div>
             </div>
         </div>
+        <br/>
+        <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px" th:object="${plan}">
+            <a id="planButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Рекомендации к стратегическому плану<i id="planIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
+            <div id="planContent" class="section-content container" style="padding-left: 200px; padding-right: 200px">
+                <br/>
+                <h5 class="font-cyrillic" th:inline="text" th:text="${plan.getDescription()}"></h5>
+            </div>
+        </div>
+    </div>
     </section>
 </div>
 </div>

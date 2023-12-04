@@ -64,14 +64,6 @@ public class CompanyController {
         User user = userService.get(id_user);
 
         String activityString = String.join(", ", activities);
-//        if (activities.contains("Производство АО") && activities.contains("Дистрибуция АО"))
-//            activityString = activityString.replaceAll("Производство АО, Дистрибуция АО", "Производство и дистрибуция АО");
-//        if (activities.contains("Производство АО и ПО") && activities.contains("Дистрибуция АО и ПО"))
-//            activityString = activityString.replaceAll("Производство АО и ПО, Дистрибуция АО и ПО", "Производство и дистрибуция АО и ПО");
-//        if (activities.contains("Разработка АО") && activities.contains("Дистрибуция АО"))
-//            activityString = activityString.replaceAll("Разработка АО, Дистрибуция АО", "Разработка и дистрибуция АО");
-//        if (activities.contains("Разработка ПО") && activities.contains("Дистрибуция ПО"))
-//            activityString = activityString.replaceAll("Разработка ПО, Дистрибуция ПО", "Разработка и дистрибуция ПО");
         companyData.setActivity(activityString);
 
         companyData = companyDataService.fillIn(companyData, company);

@@ -1,13 +1,16 @@
 package project.controllers;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import project.entity.*;
 import project.service.*;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,27 +25,67 @@ public class CompetitivenessController {
     SWOTService swotService;
     @Autowired
     CompetitivenessService competitivenessService;
+    @Autowired
+    StrategicPlanService planService;
+    @Autowired
+    ChartService chartService;
+    @Autowired
+    ForecastService forecastService;
 
-    @PostMapping("/analysis/{idu}/{idc}")
-    public String analysis(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company){
+    @RequestMapping(value = "/analysis/{idu}/{idc}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String analysis(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company) {
         Company company = companyService.get(id_company);
         User user = userService.get(id_user);
-        CompanyData companyData = companyDataService.find(id_company);
+        CompanyData companyData = companyDataService.findByCompanyId(id_company);
 
-        if (companyData==null)
+        if (companyData == null)
             return "redirect:/go-to-company-data/" + id_user + "/" + id_company;
 
         SWOT swot = swotService.findByCompany(company);
-        if (swot==null)
-            return "redirect:/swot/"+id_company;
+        if (swot == null) {
+            swot = swotService.SWOTAnalysis(companyData.getRevenue22(), companyData.getEmployees22(), companyData.getCompany());
+            swotService.save(swot);
+        }
 
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
-        if (competitiveness==null)
+        if (competitiveness == null)
             competitiveness = competitivenessService.makeAnalisys(company);
 
-        List<Double> forecastRevComp = competitivenessService.makeForecastRevCompany(competitiveness);
-        List<Double> forecastRevMarket = competitivenessService.makeForecastRevMarket();
-        List<Double> forecastMarketShare = competitivenessService.makeForecastMarketShare(competitiveness);
+        ForecastData forecastData = forecastService.findByCompanyData(companyData);
+        List<Double> forecastRevComp = new ArrayList<>();
+        List<Double> forecastRevMarket = new ArrayList<>();
+        List<Double> forecastMarketShare = new ArrayList<>();
+        if (forecastData == null) {
+            forecastRevComp = forecastService.makeForecastRevCompany(competitiveness);
+            forecastRevMarket = forecastService.makeForecastRevMarket();
+            forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness);
+            forecastService.createForecast(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
+        } else{
+            String[] compRevArr = forecastData.getCompRevenue23().split(",");
+            for (String data : compRevArr) {
+                forecastRevComp.add(Double.parseDouble(data));
+            }
+
+            String[] marketRevArr = forecastData.getMarketRevenue23().split(",");
+            for (String data : marketRevArr) {
+                forecastRevMarket.add(Double.parseDouble(data));
+            }
+
+            String[] marketShareArr = forecastData.getMarketShare23().split(",");
+            for (String data : marketShareArr) {
+                forecastMarketShare.add(Double.parseDouble(data));
+            }
+        }
+
+        Charts charts = chartService.findByCompanyData(companyData);
+        if (charts == null)
+            chartService.createCharts(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
+
+        StrategicPlan plan = planService.findByCompany(company);
+        if (plan == null) {
+            plan = planService.makeRecommendations(companyData);
+            planService.save(plan);
+        }
 
         model.addAttribute("user", user);
         model.addAttribute("swot", swot);
@@ -52,6 +95,17 @@ public class CompetitivenessController {
         model.addAttribute("forecastRevComp", forecastRevComp);
         model.addAttribute("forecastRevMarket", forecastRevMarket);
         model.addAttribute("forecastMarketShare", forecastMarketShare);
+        model.addAttribute("plan", plan);
         return "competitiveness";
     }
+
+    @PostMapping("/save-report/{id}")
+    public String saveReport(@PathVariable("id") long id_company, @RequestParam("directoryPath") String directoryPath) throws IOException, InvalidFormatException {
+        Company company = companyService.get(id_company);
+
+        competitivenessService.fillReportTemplate(company, directoryPath/*, revCompImage, marketShareImage*/);
+
+        return "redirect:/analysis/" + company.getUser().getId() + "/" + id_company;
+    }
+
 }

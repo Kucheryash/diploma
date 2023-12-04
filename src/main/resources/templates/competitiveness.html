@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.js" integrity="sha512-6LKCH7i2+zMNczKuCT9ciXgFCKFp3MevWTZUXDlk7azIYZ2wF5LRsrwZqO7Flt00enUI+HwzzT5uhOvy6MNPiA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
     <link rel="stylesheet" href="/styles/style.css">
     <script src="../../styles/script.js"></script>
 
@@ -81,7 +82,9 @@
         </section>
         <section class="p-section align-items-center" style="padding-top: 50px">
             <div style="padding-left: 300px; padding-right: 300px">
-            <table>
+                <h5 class="font-cyrillic text-center">В таблице показаны данные компании за 2022 год.</h5>
+                <br/>
+                <table>
                 <tr style="background-color: #f2f2f2">
                     <th>Выручка компании, USD</th>
                     <th>Штатная численность сотрудников</th>
@@ -115,6 +118,8 @@
             <img src="../../images/logo.png" alt="Logo" width="80" height="80">
         </section>
         <section class="p-section" style="padding-top: 50px">
+            <h5 class="font-cyrillic text-center">На графиках показана предполагаемая выручка и рыночная доля компании в 2023 году по месяцам.</h5>
+            <br/><br/>
             <div class="row d-flex align-items-center justify-content-center" style="padding-left: 200px; padding-right: 200px; margin: 0">
                 <div class="col d-flex align-items-center justify-content-center">
                     <canvas id="revCompChart" width="400" height="350"></canvas>
@@ -122,13 +127,13 @@
                 <div class="col d-flex align-items-center justify-content-center">
                     <canvas id="marketShareChart" width="400" height="350"></canvas>
                 </div>
-            <script>
-                var forecastRevComp = [[${forecastRevComp}]];
-                var forecastRevMarket = [[${forecastRevMarket}]];
-                var forecastMarketShare = [[${forecastMarketShare}]];
+                <script>
+                    var forecastRevComp = [[${forecastRevComp}]];
+                    var forecastRevMarket = [[${forecastRevMarket}]];
+                    var forecastMarketShare = [[${forecastMarketShare}]];
 
-                initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShare);
-            </script>
+                    initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShare);
+                </script>
             </div>
         </section>
     </div>
@@ -146,9 +151,31 @@
         </section>
         <section class="p-section align-items-center" style="padding-top: 50px">
             <div style="padding-left: 300px; padding-right: 300px">
-
+                <h5 class="font-cyrillic" th:inline="text" th:text="${plan.getDescription()}"></h5>
             </div>
         </section>
+    </div>
+
+    <div class="font-cyrillic text-center" style="background-color: #4F5D75; padding-top: 30px; padding-bottom: 30px">
+        <h4 style="color: white">Вы можете сохранить себе отчёт о конкурентоспособности Вашей компании.</h4>
+        <br/>
+        <form th:action="@{/save-report/{id}(id=${company.getId()})}" method="post">
+            <button type="button" class="btn btn-light btn-orange" onclick="chooseDirectory()">Выберите путь</button>
+            <br/><br/>
+            <div class="d-flex align-items-center justify-content-center">
+                <input type="text" class="form-control" style="width: 300px" name="directoryPath" id="directoryPath" readonly>
+            </div>
+            <br/><br/>
+            <input class="btn btn-light btn-orange" type="submit" value="Сохранить отчёт">
+        </form>
+        <script>
+            function chooseDirectory() {
+                window.directoryHandle = window.showDirectoryPicker();
+                window.directoryHandle.then(handle => {
+                    document.getElementById('directoryPath').value = handle.name;
+                });
+            }
+        </script>
     </div>
 
     <section class="p-section font-cyrillic">
@@ -160,12 +187,6 @@
             <a id="mailButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Заявка специалисту<i id="mailIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
             <div id="mailContent" class="section-content container" style="padding-left: 200px; padding-right: 200px; display: flex; align-items: center; justify-content: center">
                 <form method="post" th:action="@{/send-email/{id}(id=${user.getId()})}">
-                    <br/>
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <div class="input-group" style="max-width: 250px">
-                        <span class="input-group-text" id="phone">+</span>
-                        <input type="text" class="form-control" id="phone_num" name="phone" placeholder="Номер телефона" aria-describedby="phone" required minlength="11" maxlength="12" pattern="\d+" title="Пожалуйста, введите только цифры">
-                    </div>
                     <br/>
                     <button class="btn btn-lg btn-light btn-orange" style="width: 150px" type="submit">Отправить</button>
                 </form>
@@ -180,7 +201,7 @@
     </script>
     <div id="notification" class="font-cyrillic" style="display: none; width: 350px; height: 250px">
         <br/>
-        <h5>Заявка успешно отправлена на почту специалиста!</h5>
+        <h5>Заявка успешно отправлена!</h5>
         <br/><br/>
         <button class="btn btn-lg btn-light btn-orange" onclick="closeNotification()">Ок</button>
     </div>

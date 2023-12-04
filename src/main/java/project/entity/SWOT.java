@@ -34,7 +34,10 @@ public class SWOT {
     @Column(nullable = false, name = "creation_date")
     private Date date;
 
-    @ManyToOne
+    @Column(nullable = false)
+    private String status;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_swot_company"))
     private Company company;
 }

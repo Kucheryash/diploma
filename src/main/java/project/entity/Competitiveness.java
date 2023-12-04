@@ -41,7 +41,7 @@ public class Competitiveness {
     @Column(nullable = false, name = "creation_date")
     private Date date;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", nullable = false, foreignKey = @ForeignKey(name = "fk_competitive_company"))
     private Company company;
 }

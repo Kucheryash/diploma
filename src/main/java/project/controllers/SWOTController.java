@@ -34,14 +34,14 @@ public class SWOTController {
 
     @GetMapping("/swot/{id}")
     public String swot(Model model, @PathVariable("id") long id_company){
-        CompanyData companyData = companyDataService.find(id_company);
         Company company = companyService.get(id_company);
         User user = company.getUser();
-        SWOT analysis = swotService.SWOTAnalysis(companyData.getRevenue22(), companyData.getEmployees22(), companyData.getCompany());
-        swotService.save(analysis);
+        SWOT swot = swotService.findByCompany(company);
+        if (swot==null)
+            return "redirect:/analysis/"+user.getId()+"/"+id_company;
         model.addAttribute("user", user);
         model.addAttribute("company", company);
-        model.addAttribute("swot", analysis);
+        model.addAttribute("swot", swot);
         return "swot";
     }
 

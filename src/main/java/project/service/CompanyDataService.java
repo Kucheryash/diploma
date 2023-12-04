@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Company;
 import project.entity.CompanyData;
-import project.entity.User;
 import project.repository.CompanyDataRepository;
 
 import java.sql.Date;
@@ -19,7 +18,7 @@ public class CompanyDataService {
     CompanyService companyService;
 
 
-    public CompanyData find(Long id_company) {
+    public CompanyData findByCompanyId(Long id_company) {
         Company company = companyService.get(id_company);
         CompanyData companyData = new CompanyData();
         companyData = repo.findByCompany(company);
@@ -42,7 +41,4 @@ public class CompanyDataService {
         return repo.findById(id).get();
     }
 
-    public void delete(Long id) {
-        repo.deleteById(id);
-    }
 }

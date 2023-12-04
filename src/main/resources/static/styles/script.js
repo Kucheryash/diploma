@@ -45,6 +45,11 @@ $(document).ready(function() {
         $("#mailContent").slideToggle();
         $("#mailIcon").toggleClass("chevron-compact-down-icon");
     });
+
+    $("#planButton").click(function() {
+        $("#planContent").slideToggle();
+        $("#planIcon").toggleClass("chevron-compact-down-icon");
+    });
 });
 $(document).ready(function() {
     $(".section-content").hide();
@@ -66,26 +71,15 @@ function closeNotification() {
 
 function initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShare) {
     function getMonthName(monthNumber) {
-        var months = [
-            'Январь',
-            'Февраль',
-            'Март',
-            'Апрель',
-            'Май',
-            'Июнь',
-            'Июль',
-            'Август',
-            'Сентябрь',
-            'Октябрь',
-            'Ноябрь',
-            'Декабрь'
-        ];
+        var months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
         return months[monthNumber - 1];
     }
+
     var monthNumbers = Array.from({length: 12}, (_, i) => i + 1);
+
     // Создание графика выручки компании
     var revCompChartCtx = document.getElementById('revCompChart').getContext('2d');
-    new Chart(revCompChartCtx, {
+    var revCompChart = new Chart(revCompChartCtx, {
         type: 'line',
         data: {
             labels: monthNumbers,
@@ -137,7 +131,7 @@ function initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShar
 
     // Создание графика рыночной доли
     var marketShareChartCtx = document.getElementById('marketShareChart').getContext('2d');
-    new Chart(marketShareChartCtx, {
+    var marketShareChart = new Chart(marketShareChartCtx, {
         type: 'line',
         data: {
             labels: monthNumbers,
@@ -166,7 +160,7 @@ function initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShar
                             return getMonthName(monthNumber);
                         },
                         label: function(context) {
-                            var label = context.dataset.label || '';
+                            varlabel = context.dataset.label || '';
                             if (label) {
                                 label += ': ';
                             }
@@ -184,6 +178,39 @@ function initializeCharts(forecastRevComp, forecastRevMarket, forecastMarketShar
 }
 
 
-// $(document).ready(function() {
-//     $('.dataTable').DataTable();
-// });
+document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Получаем выбранный путь директории
+    var directoryPath = document.getElementById('directoryPath').value;
+
+    // Отправляем путь директории на сервер
+    fetch('/generate-report/{id}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ directoryPath: directoryPath })
+    })
+        .then(response => {
+            // Обрабатываем ответ от сервера
+            if (response.ok) {
+                // Успешно сгенерирован отчёт
+                return response.text();
+            } else {
+                // Ошибка
+                throw new Error('Ошибка при генерации отчёта');
+            }
+        })
+        .then(result => {
+            // Обрабатываем результат
+            console.log(result);
+        })
+        .catch(error => {
+            // Обрабатываем ошибки
+            console.error(error);
+        });
+});
+
+
+

@@ -26,15 +26,20 @@
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http
 //                .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/", "/static/**","/static/styles/**", "/static/images/**", "/singin", "/reg", "/registration/**", "/home/**", "/login/**").permitAll()
-////                        .requestMatchers("/home/{id}/**").hasRole("BA")
+//                        .requestMatchers("/", "/static/**","/static/styles/**", "/static/images/**", "/reg", "/registration/**", "/home", "/login/**").permitAll()
+////                        .requestMatchers("/home/**").hasRole("BA")
 //                        .anyRequest().authenticated()
 //                )
 //                .formLogin((form) -> form
 //                        .loginPage("/login")
+//                        .failureUrl("/login_error")
+//                        .successHandler(authenticationSuccessHandler) // Добавляем кастомный AuthenticationSuccessHandler
 //                        .permitAll()
 //                )
-//                .logout((logout) -> logout.permitAll());
+//                .logout((logout) -> logout
+//                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                        .permitAll()
+//                        .logoutSuccessUrl("/"));
 //        return http.build();
 //    }
 //
@@ -44,8 +49,8 @@
 //                .dataSource(dataSource)
 //                .passwordEncoder(passwordEncoder)
 //                .usersByUsernameQuery("SELECT email, password, active FROM users WHERE email = ?")
-//                .authoritiesByUsernameQuery("SELECT email, role FROM roles JOIN users ON users.iduser " +
-//                        "= roles.iduser WHERE email=?");
+//                .authoritiesByUsernameQuery("SELECT email, role FROM roles JOIN users ON users.id_user " +
+//                        "= roles.id_user WHERE email=?");
 //    }
 //
 //}

@@ -172,20 +172,36 @@ public class CompetitivenessService {
         }
     }
 
-    private void insertChartImage(XWPFDocument document, String placeholder, File imageFile) throws IOException, InvalidFormatException {
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
-        for (XWPFParagraph paragraph : paragraphs) {
+    private void insertChartImage(XWPFDocument doc, String variable, File imageFile) throws IOException, InvalidFormatException {
+        for (XWPFParagraph paragraph : doc.getParagraphs()) {
             List<XWPFRun> runs = paragraph.getRuns();
 
-            for (XWPFRun run : runs) {
-                String text = run.getText(0);
+            if (runs.size() > 0) {
+                StringBuilder fullText = new StringBuilder();
+                for (XWPFRun run : runs) {
+                    fullText.append(run.getText(0));
+                }
 
-                if (text != null && text.contains(placeholder)) {
-                    run.setText("", 0);  // Очистка плейсхолдера
+                String text = fullText.toString();
+                int variableIndex = text.indexOf(variable);
 
-                    // Вставка изображения
+                if (variableIndex != -1) {
+                    // Удаляем переменную из текста параграфа
+                    text = text.substring(0, variableIndex) + text.substring(variableIndex + variable.length());
+
+                    // Очищаем параграф от существующих run
+                    for (int i = runs.size() - 1; i >= 0; i--) {
+                        paragraph.removeRun(i);
+                    }
+
+                    // Вставляем обновленный текст без переменной
+                    XWPFRun newRun = paragraph.createRun();
+                    newRun.setText(text);
+
+                    // Вставляем картинку
+                    XWPFRun runImage = paragraph.createRun();
                     InputStream imageStream = new FileInputStream(imageFile);
-                    run.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, imageFile.getName(), Units.toEMU(400), Units.toEMU(300));
+                    runImage.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, imageFile.getName(), Units.toEMU(400), Units.toEMU(300));
                     imageStream.close();
                 }
             }

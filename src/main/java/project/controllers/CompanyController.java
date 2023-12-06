@@ -6,14 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.entity.Company;
-import project.entity.CompanyData;
-import project.entity.SWOT;
-import project.entity.User;
-import project.service.CompanyDataService;
-import project.service.CompanyService;
-import project.service.SWOTService;
-import project.service.UserService;
+import project.entity.*;
+import project.service.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +22,10 @@ public class CompanyController {
     UserService userService;
     @Autowired
     SWOTService swotService;
+    @Autowired
+    CompetitivenessService competitivenessService;
+    @Autowired
+    StrategicPlanService planService;
 
     @GetMapping("/go-to-company-data/{idu}/{idc}")
     public String goToAdd(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company, @ModelAttribute("companyData") CompanyData companyData){
@@ -71,5 +69,35 @@ public class CompanyController {
         model.addAttribute("user", user);
         model.addAttribute("company", company);
         return "add-success";
+    }
+
+    @GetMapping("/edit-comp-spec/{id}")
+    public String editCompSpec(@PathVariable("id") long id, Model model){
+        Company company = companyService.get(id);
+
+        Competitiveness competitiveness = competitivenessService.findByCompany(company);
+        SWOT swot = swotService.findByCompany(company);
+        StrategicPlan plan = planService.findByCompany(company);
+
+        model.addAttribute("company", company);
+        model.addAttribute("competitivenessList", competitiveness);
+        model.addAttribute("swot", swot);
+        model.addAttribute("plan", plan);
+        return "edit-comp-spec";
+    }
+
+    @PostMapping("/update-comp-spec/{id}")
+    public String updateCompSpec(@PathVariable("id") long id, @ModelAttribute("swot") SWOT swot, @ModelAttribute("plan") StrategicPlan plan){
+        swot.setStrengths(swot.getStrengths());
+        swot.setWeaknesses(swot.getWeaknesses());
+        swot.setOpportunities(swot.getOpportunities());
+        swot.setThreats(swot.getThreats());
+        swot.setStatus("изменено");
+        swotService.save(swot);
+
+        plan.setDescription(plan.getDescription());
+        plan.setStatus("изменено");
+        planService.save(plan);
+        return "redirect:/specialist";
     }
 }

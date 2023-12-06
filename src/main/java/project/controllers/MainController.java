@@ -13,7 +13,10 @@ import project.repository.UserRepository;
 import project.service.CompanyService;
 import project.service.UserService;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -42,15 +45,18 @@ public class MainController {
         return "login";
     }
 
-    @PostMapping("/singin")
-    public String login(Model model, @ModelAttribute("user") User user){
-        Optional<User> u = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
-        if(u.isEmpty()){
-            model.addAttribute("errorMessage", "Данного пользователя не существует! Проверьте корректность введённых данных.");
-            return "redirect:/login";
-        }
-        return "redirect:/home/"+u.get().getId();
-    }
+//    @PostMapping("/singin")
+//    public String login(Model model, @ModelAttribute("user") User user){
+//        Optional<User> u = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
+//        if(u.isEmpty()){
+//            model.addAttribute("errorMessage", "Данного пользователя не существует! Проверьте корректность введённых данных.");
+//            return "redirect:/login";
+//        }
+//        if (u.get().getRole().equals("ROLE_SPEC"))
+//            return "redirect:/specialist";
+//
+//        return "redirect:/home/"+u.get().getId();
+//    }
 
     @GetMapping("/reg")
     public String register(@ModelAttribute("user") User user, @ModelAttribute("company") Company company){
@@ -59,6 +65,13 @@ public class MainController {
 
     @PostMapping("/registration")
     public String registration(Model model, @ModelAttribute("user") User user, @ModelAttribute("company") Company company){
+//        Set<String> roles = Arrays.stream(Role.values())
+//                .map(Role::name)
+//                .collect(Collectors.toSet());
+//        if (roles.contains(Role.ROLE_SPEC)) {
+//            user.getRole().add(Role.ROLE_SPEC);
+//        }
+
         String message = userService.newUser(user, company);
         if (message.equals("success")) {
             User newUser = userService.find(user);

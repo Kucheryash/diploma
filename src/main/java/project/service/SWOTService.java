@@ -134,6 +134,10 @@ public class SWOTService {
         return repo.findByCompany(company);
     }
 
+    public List<SWOT> findAllByStatus(String status){
+        return repo.findAllByStatus(status);
+    }
+
     public void save(SWOT swot){
         repo.save(swot);
     }

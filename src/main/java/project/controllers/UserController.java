@@ -89,23 +89,47 @@ public class UserController {
         return "account";
     }
 
+    @GetMapping("/specialist")
+    public String accSpecialist(Model model){
+        LocalTime currentTime = LocalTime.now();
+        int hour = currentTime.getHour();
+        String greeting;
+        if (hour >= 6 && hour < 11)
+            greeting = "Доброе утро";
+        else if (hour >= 11 && hour < 17)
+            greeting = "Добрый день";
+        else if (hour >= 17 && hour < 22)
+            greeting = "Добрый вечер";
+        else
+            greeting = "Доброй ночи";
+        model.addAttribute("greeting", greeting);
+        List<SWOT> swotList = swotService.findAllByStatus("заявка");
+
+        List<Company> companyList = new ArrayList<>();
+        for (SWOT swot : swotList) {
+            companyList.add(swot.getCompany());
+        }
+
+        model.addAttribute("companyList", companyList);
+        model.addAttribute("user", userService.get(3L));  //!!!
+        return "acc-specialist";
+    }
+
     @PostMapping("/send-email/{id}")
     public String email(Model model, @PathVariable("id") Long id) {
-        User user = userService.get(id);
         Company company = companyService.fingByBA(id);
-        CompanyData companyData = dataService.findByCompanyId(company.getId());
-        SWOT swot = swotService.SWOTAnalysis(companyData.getRevenue22(), companyData.getEmployees22(), companyData.getCompany());
-        Competitiveness competitiveness = competitivenessService.findByCompany(company);
 
-        //ДОБАВИТЬ РЕАЛИЗАЦИЮ!!!!
+        SWOT swot = swotService.findByCompany(company);
+        swot.setStatus("заявка");
+        swotService.save(swot);
+        StrategicPlan plan = planService.findByCompany(company);
+        plan.setStatus("заявка");
+        planService.save(plan);
 
-        model.addAttribute("user", user);
-        model.addAttribute("company", company);
-        model.addAttribute("companyData", companyData);
-        model.addAttribute("swot", swot);
-        model.addAttribute("competitivenessList", competitiveness);
         model.addAttribute("successMessage", "Отправлено");
-        return "competitiveness";
+        return "redirect:/analysis/"+id+"/"+company.getId();
     }
+
+
 
 }

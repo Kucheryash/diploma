@@ -30,6 +30,8 @@
             <h1 style="color: white; font-weight: bold">Анализ конкурентоспособности компании "<span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"</h1>
             <br/>
             <p class="mb-4" style="color: white">Оценка позиции компании относительно конкурентов и выявление стратегий для улучшения её конкурентного положения на рынке</p>
+            <br/>
+            <p th:inline="text" th:text="${status}" style="color: #D4B5A7"></p>
         </div>
     </section>
     <div th:object="${swot}">
@@ -160,13 +162,16 @@
         <h4 style="color: white">Вы можете сохранить себе отчёт о конкурентоспособности Вашей компании.</h4>
         <br/>
         <form th:action="@{/save-report/{id}(id=${company.getId()})}" method="post">
-            <button type="button" class="btn btn-light btn-orange" onclick="chooseDirectory()">Выберите путь</button>
+            <button type="button" class="btn btn-light btn-orange" onclick="chooseDirectory()">Выбрать путь</button>
             <br/><br/>
             <div class="d-flex align-items-center justify-content-center">
-                <input type="text" class="form-control" style="width: 300px" name="directoryPath" id="directoryPath" readonly>
+                <input type="text" class="form-control" style="width: 200px" name="directoryPath" id="directoryPath" readonly>
             </div>
             <br/><br/>
-            <input class="btn btn-light btn-orange" type="submit" value="Сохранить отчёт">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="bi bi-file-earmark-bar-graph" style="font-size: 32px; color: #f2f2f2; padding-right: 5px"></i>
+                <input class="btn btn-light btn-orange" type="submit" value="Сохранить отчёт">
+            </div>
         </form>
         <script>
             function chooseDirectory() {

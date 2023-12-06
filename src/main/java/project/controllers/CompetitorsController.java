@@ -17,18 +17,14 @@ public class CompetitorsController {
     UserService userService;
 
     @GetMapping("/market")
-    public String swot(Model model){
-//        List<Market> competitors = competitorsService.getListFromExcel();
-//        model.addAttribute("competitors", competitors);
+    public String swot(){
         return "market";
     }
 
     @GetMapping("/market/{id}")
     public String swot(Model model, @PathVariable("id") long id_user){
-//        List<Market> competitors = competitorsService.getListFromExcel();
         User user = userService.get(id_user);
         model.addAttribute("user", user);
-//        model.addAttribute("competitors", competitors);
         return "market";
     }
 

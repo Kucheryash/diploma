@@ -87,6 +87,14 @@ public class CompetitivenessController {
             planService.save(plan);
         }
 
+        String status = swot.getStatus();
+        if (status.equals("заявка"))
+            model.addAttribute("status", "<Заявка специалисту отправлена>");
+        else if (status.equals("изменено"))
+            model.addAttribute("status", "<Данные обновлены>");
+        else
+            model.addAttribute("status", "");
+
         model.addAttribute("user", user);
         model.addAttribute("swot", swot);
         model.addAttribute("company", company);

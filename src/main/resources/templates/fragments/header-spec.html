@@ -1,0 +1,17 @@
+<div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-4 border-bottom" style="padding-left: 10px; padding-right: 20px" sec:authorize="isAuthenticated()">
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand" style="padding: 0">
+                <img src="../../images/logo.png" alt="Logo" width="50" height="50">
+            </a>
+            <p class="p-header" style="font-size: 20px; font-weight: bold; margin: 0">AssessIT</p>
+        </div>
+        <div class="col-md-3 text-end">
+            <a class="p-header" style="margin-right: 5px" th:href="@{/market}">IT-рынок</a>
+            <a class="p-header" style="margin-right: 5px" th:href="@{/specialist}">Личный кабинет</a>
+            <form th:action="@{/logout}" method="post" style="display: inline-block;">
+                <a class="p-header" style="color: #4F5D75" type="submit">Выйти</a>
+            </form>
+        </div>
+    </header>
+</div>

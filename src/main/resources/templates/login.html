@@ -24,7 +24,7 @@
         <br/>
         <h2 style="color: #2C3341">Вход в аккаунт</h2>
         <br/>
-        <form th:method="post" th:action="@{/singin}" th:object="${user}">
+        <form th:method="post" th:action="@{/login}" th:object="${user}">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div class="form-floating">
                 <input type="email" class="form-control" id="floatingInput" placeholder="Email" aria-describedby="floatingInput" required th:field="*{email}">

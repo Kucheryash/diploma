@@ -14,7 +14,6 @@
 //    public void addViewControllers(ViewControllerRegistry registry) {
 //        registry.addViewController("/").setViewName("home");
 //        registry.addViewController("/login").setViewName("login");
-////        registry.addViewController("/singin").setViewName("home");
 //        registry.addViewController("/home/{id}").setViewName("home");
 //        registry.addViewController("/reg").setViewName("registration");
 //        registry.addViewController("/registration").setViewName("home");

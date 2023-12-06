@@ -1,26 +1,32 @@
 <div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-4 border-bottom" style="padding-left: 10px; padding-right: 20px">
-        <div class="d-flex align-items-center">
-            <a class="navbar-brand" style="padding: 0" th:if="${user==null}" th:href="@{/}">
-                <img src="../../images/logo.png" alt="Logo" width="50" height="50">
-            </a>
-            <a class="navbar-brand" style="padding: 0" th:if="${user!=null}" th:href="@{/home/{id}(id=${user.getId()})}">
-                <img src="../../images/logo.png" alt="Logo" width="50" height="50">
-            </a>
-            <p class="p-header" style="font-size: 20px; font-weight: bold; margin: 0">AssessIT</p>
+        <div sec:authorize="isAuthenticated()">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" style="padding: 0" th:href="@{/home/{id}(id=${user.getId()})}">
+                    <img src="../../images/logo.png" alt="Logo" width="50" height="50">
+                </a>
+                <p class="p-header" style="font-size: 20px; font-weight: bold; margin: 0">AssessIT</p>
+            </div>
+            <div class="col-md-3 text-end">
+                <a class="p-header" style="margin-right: 5px" th:href="@{/prices/{id}(id=${user.getId()})}">Цены</a>
+                <a class="p-header" style="margin-right: 5px" th:href="@{/account/{id}(id=${user.getId()})}">Личный кабинет</a>
+                <form th:action="@{/logout}" method="post" style="display: inline-block;">
+                    <a class="p-header" style="color: #4F5D75" type="submit">Выйти</a>
+                </form>
+            </div>
         </div>
-        <div class="col-md-3 text-end" th:if="${user==null}">
-            <a class="p-header" style="margin-right: 5px" th:href="@{/prices}">Цены</a>
-            <a class="p-header" style="margin-right: 5px" th:href="@{/login}">Войти</a>
-            <a class="p-header" style="color: #4F5D75" th:href="@{/reg}">Зарегистрироваться</a>
-        </div>
-
-        <div class="col-md-3 text-end" th:if="${user!=null}">
-            <a class="p-header" style="margin-right: 5px" th:href="@{/prices/{id}(id=${user.getId()})}">Цены</a>
-            <a class="p-header" style="margin-right: 5px" th:href="@{/account/{id}(id=${user.getId()})}">Личный кабинет</a>
-            <form th:action="@{/logout}" method="post" style="display: inline-block;">
-                <a class="p-header" style="color: #4F5D75" type="submit">Выйти</a>
-            </form>
+        <div sec:authorize="isAnonymous()">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" style="padding: 0" th:href="@{/}">
+                    <img src="../../images/logo.png" alt="Logo" width="50" height="50">
+                </a>
+                <p class="p-header" style="font-size: 20px; font-weight: bold; margin: 0">AssessIT</p>
+            </div>
+            <div class="col-md-3 text-end">
+                <a class="p-header" style="margin-right: 5px" th:href="@{/prices}">Цены</a>
+                <a class="p-header" style="margin-right: 5px" th:href="@{/login}">Войти</a>
+                <a class="p-header" style="color: #4F5D75" th:href="@{/reg}">Зарегистрироваться</a>
+            </div>
         </div>
     </header>
 </div>

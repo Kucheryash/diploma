@@ -50,6 +50,11 @@ $(document).ready(function() {
         $("#planContent").slideToggle();
         $("#planIcon").toggleClass("chevron-compact-down-icon");
     });
+
+    $("#reqButton").click(function() {
+        $("#reqContent").slideToggle();
+        $("#reqIcon").toggleClass("chevron-compact-down-icon");
+    });
 });
 $(document).ready(function() {
     $(".section-content").hide();

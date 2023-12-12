@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import project.entity.*;
+import project.entity.enums.Role;
 import project.service.*;
 
 import java.time.LocalTime;
@@ -30,6 +31,10 @@ public class UserController {
 
     @GetMapping("/account/{id}")
     public String account(Model model, @PathVariable("id") long id_user, @ModelAttribute("companyData") CompanyData companyData){
+        User user = userService.get(id_user);
+        if (user.getRole().contains(Role.ROLE_SPEC))
+            return "redirect:/specialist";
+
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
         String greeting;
@@ -43,7 +48,6 @@ public class UserController {
             greeting = "Доброй ночи";
         model.addAttribute("greeting", greeting);
 
-        User user = userService.get(id_user);
         Company company = companyService.fingByBA(id_user);
         CompanyData data = dataService.findByCompanyId(company.getId());
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
@@ -89,8 +93,8 @@ public class UserController {
         return "account";
     }
 
-    @GetMapping("/specialist")
-    public String accSpecialist(Model model){
+    @GetMapping("/specialist/{id}")
+    public String accSpecialist(Model model, @PathVariable("id") long id_user){
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
         String greeting;
@@ -111,7 +115,7 @@ public class UserController {
         }
 
         model.addAttribute("companyList", companyList);
-        model.addAttribute("user", userService.get(3L));  //!!!
+        model.addAttribute("user", userService.get(id_user));
         return "acc-specialist";
     }
 
@@ -126,10 +130,9 @@ public class UserController {
         plan.setStatus("заявка");
         planService.save(plan);
 
+        //userService.sendEmail(company.getName());
+
         model.addAttribute("successMessage", "Отправлено");
         return "redirect:/analysis/"+id+"/"+company.getId();
     }
-
-
-
 }

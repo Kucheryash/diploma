@@ -14,8 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.js" integrity="sha512-6LKCH7i2+zMNczKuCT9ciXgFCKFp3MevWTZUXDlk7azIYZ2wF5LRsrwZqO7Flt00enUI+HwzzT5uhOvy6MNPiA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="/styles/style.css">
-    <script src="../styles/script.js"></script>
+    <link rel="stylesheet" href="../static/styles/style.css">
+    <script src="../static/styles/script.js"></script>
 
 </head>
 
@@ -24,6 +24,7 @@
 <button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
 
 <section class="text-center font-cyrillic p-section" style="background-color: #2d3142">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <p style="margin: 0; color: #f2f2f2; font-weight: bold">Личный кабинет</p>
     <h1 class="text-center" style="color: white; font-weight: bold; margin-top: 18px; margin-bottom: 18px" th:object="${greeting}">
         <span th:text="${greeting}">Здравствуйте</span>,
@@ -43,7 +44,7 @@
                     <div style="min-width: 250px; display: inline-block; text-align: left">
                         <span th:text="${company.getName()}"></span>
                     </div>
-                    <a th:href="@{/edit-comp-spez/{id}(id=${company.getId()})}" class="btn btn-light btn-orange">Просмотреть</a>
+                    <a th:href="@{/edit-comp-spec/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}" class="btn btn-light btn-orange">Просмотреть</a>
                     <br/>
                 </li>
             </ul>

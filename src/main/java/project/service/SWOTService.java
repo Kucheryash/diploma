@@ -61,6 +61,7 @@ public class SWOTService {
         analysis.setWeaknesses(weaknesses);
         analysis.setOpportunities(opportunities);
         analysis.setThreats(threats);
+        analysis.setStatus("создан");
         return analysis;
     }
 

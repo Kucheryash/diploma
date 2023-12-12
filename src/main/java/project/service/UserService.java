@@ -1,6 +1,10 @@
 package project.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Company;
@@ -18,13 +22,11 @@ public class UserService {
     @Autowired
     CompanyRepository repoCompany;
 
-//    @Autowired
-//    CompanyService companyService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JavaMailSender mailSender;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-    //speci@li.st
     public String newUser(User user, Company company) {
         String email = user.getEmail();
         String password = user.getPassword();
@@ -38,8 +40,8 @@ public class UserService {
 
         Date date = Date.valueOf(java.time.LocalDate.now());
         user.setDate(date);
-//        user.setHash(passwordEncoder.encode(password));
-//        user.setRole(Role.ROLE_BA);
+        user.setNohash(password);
+        user.setPassword(passwordEncoder.encode(password));
         repo.save(user);
 
         company.setUser(find(user));
@@ -56,46 +58,28 @@ public class UserService {
         return repo.findByEmail(user.getEmail());
     }
 
+    public Long getUserIdByUsername(String email) {
+        User user = repo.findByEmail(email);
+        return user.getId();
+    }
+
     public void delete(Long id) {
         repo.deleteById(id);
     }
 
-//    public void sendEmail(String phone) {
-//        // Настройки для подключения к серверу Gmail
-//        Properties properties = new Properties();
-//        properties.put("mail.smtp.auth", "true");
-//        properties.put("mail.smtp.starttls.enable", "true");
-//        properties.put("mail.smtp.host", "smtp.gmail.com");
-//        properties.put("mail.smtp.port", "587");
-//        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-//
-//        // Учетные данные отправителя
-//        final String senderEmail = "julaymyak@gmail.com";
-//        final String senderPassword = "j08260716";
-//
-//        // Создание сессии
-//        Session session = Session.getInstance(properties, new Authenticator() {
-//            protected PasswordAuthentication getPasswordAuthentication() {
-//                return new PasswordAuthentication(senderEmail, senderPassword);
-//            }
-//        });
-//        String specialistEmail = "julaymyak12@gmail.com";
-//        String messageTopic = "Помощь с конкурентоспособностью компании.";
-//        String messageContent = "Прошу помочь, вот номер: +" + phone;
-//        try {
-//            // Создание объекта MimeMessage
-//            Message message = new MimeMessage(session);
-//            message.setFrom(new InternetAddress(senderEmail));
-//            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(specialistEmail));
-//            message.setSubject(messageTopic);
-//            message.setText(messageContent);
-//
-//            // Отправка сообщения
-//            Transport.send(message);
-//
-//            System.out.println("Письмо успешно отправлено!");
-//        } catch (MessagingException e) {
-//            System.out.println("Ошибка при отправке письма: " + e.getMessage());
-//        }
-//    }
+    @Value("${spring.mail.username}")
+    private String username;
+    public void sendEmail(String comp_name) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        String emailTo = "julaymyak@gmail.com";
+        String subject = "Редактировать анализ компании '"+comp_name+"'.";
+        String message = "С нетерпением жду взгялда специалиста!";
+
+        mailMessage.setFrom(username);
+        mailMessage.setTo(emailTo);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        mailSender.send(mailMessage);
+    }
 }

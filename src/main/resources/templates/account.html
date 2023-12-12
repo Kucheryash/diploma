@@ -14,8 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.js" integrity="sha512-6LKCH7i2+zMNczKuCT9ciXgFCKFp3MevWTZUXDlk7azIYZ2wF5LRsrwZqO7Flt00enUI+HwzzT5uhOvy6MNPiA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="/styles/style.css">
-    <script src="../styles/script.js"></script>
+    <link rel="stylesheet" href="../static/styles/style.css">
+    <script src="../static/styles/script.js"></script>
 
 </head>
 
@@ -23,6 +23,7 @@
 <header th:insert="~{fragments/header :: header}"></header>
 <button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
 
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <div th:object="${company}">
 <div th:object="${companyData}">
     <section class="text-center font-cyrillic p-section" style="background-color: #2d3142">
@@ -54,6 +55,7 @@
     </h2>
     <br/>
     <form class="text-center" method="post" th:object="${analysis}" th:if="${analysis==null}" th:action="@{/analysis/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <h2>Упс... Вы ещё не проводили анализ конкурентоспособности Вашей компании.</h2>
         <br/>
         <button class="btn btn-lg btn-light btn-orange" style="width: 300px" type="submit">Выполнить анализ</button>

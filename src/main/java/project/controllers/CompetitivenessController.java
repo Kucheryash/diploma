@@ -9,7 +9,6 @@ import project.entity.*;
 import project.service.*;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +110,7 @@ public class CompetitivenessController {
     public String saveReport(@PathVariable("id") long id_company, @RequestParam("directoryPath") String directoryPath) throws IOException, InvalidFormatException {
         Company company = companyService.get(id_company);
 
-        competitivenessService.fillReportTemplate(company, directoryPath/*, revCompImage, marketShareImage*/);
+        competitivenessService.fillReportTemplate(company, directoryPath);
 
         return "redirect:/analysis/" + company.getUser().getId() + "/" + id_company;
     }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import project.entity.*;
 import project.service.*;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class CompanyController {
     CompetitivenessService competitivenessService;
     @Autowired
     StrategicPlanService planService;
+    @Autowired
+    ForecastService forecastService;
 
     @GetMapping("/go-to-company-data/{idu}/{idc}")
     public String goToAdd(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company, @ModelAttribute("companyData") CompanyData companyData){
@@ -71,14 +75,15 @@ public class CompanyController {
         return "add-success";
     }
 
-    @GetMapping("/edit-comp-spec/{id}")
-    public String editCompSpec(@PathVariable("id") long id, Model model){
-        Company company = companyService.get(id);
+    @GetMapping("/edit-comp-spec/{idu}/{idc}")
+    public String editCompSpec(@PathVariable("idu") long id_user, @PathVariable("idc") long id_company, Model model){
+        Company company = companyService.get(id_company);
 
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
         SWOT swot = swotService.findByCompany(company);
         StrategicPlan plan = planService.findByCompany(company);
 
+        model.addAttribute("user", userService.get(id_user));
         model.addAttribute("company", company);
         model.addAttribute("competitivenessList", competitiveness);
         model.addAttribute("swot", swot);
@@ -86,18 +91,61 @@ public class CompanyController {
         return "edit-comp-spec";
     }
 
-    @PostMapping("/update-comp-spec/{id}")
-    public String updateCompSpec(@PathVariable("id") long id, @ModelAttribute("swot") SWOT swot, @ModelAttribute("plan") StrategicPlan plan){
-        swot.setStrengths(swot.getStrengths());
-        swot.setWeaknesses(swot.getWeaknesses());
-        swot.setOpportunities(swot.getOpportunities());
-        swot.setThreats(swot.getThreats());
+    @PostMapping("/update-comp-spec/{idu}/{idc}")
+    public String updateCompSpec(@PathVariable("idu") long id_user, @PathVariable("idc") long id_company, @ModelAttribute("swot") SWOT newSwot, @ModelAttribute("plan") StrategicPlan newPlan){
+        Date date = Date.valueOf(java.time.LocalDate.now());
+        Company company = companyService.get(id_company);
+
+        SWOT swot = swotService.findByCompany(company);
+        swot.setStrengths(newSwot.getStrengths());
+        swot.setWeaknesses(newSwot.getWeaknesses());
+        swot.setOpportunities(newSwot.getOpportunities());
+        swot.setThreats(newSwot.getThreats());
         swot.setStatus("изменено");
+        swot.setDate(date);
         swotService.save(swot);
 
-        plan.setDescription(plan.getDescription());
+        StrategicPlan plan = planService.findByCompany(company);
+        plan.setDescription(newPlan.getDescription());
         plan.setStatus("изменено");
+        plan.setDate(date);
         planService.save(plan);
-        return "redirect:/specialist";
+        return "redirect:/specialist/"+id_user;
+    }
+
+    @GetMapping("/forecast/{id}")
+    public String forecast(Model model, @PathVariable("id") long id_company){
+        Company company = companyService.get(id_company);
+        User user = company.getUser();
+
+        CompanyData companyData = companyDataService.findByCompanyId(id_company);
+        if (companyData == null)
+            return "redirect:/analysis/"+user.getId()+"/"+id_company;
+
+        ForecastData forecastData = forecastService.findByCompanyData(companyData);
+        List<Double> forecastRevComp = new ArrayList<>();
+        List<Double> forecastRevMarket = new ArrayList<>();
+        List<Double> forecastMarketShare = new ArrayList<>();
+        String[] compRevArr = forecastData.getCompRevenue23().split(",");
+        for (String data : compRevArr) {
+            forecastRevComp.add(Double.parseDouble(data));
+        }
+
+        String[] marketRevArr = forecastData.getMarketRevenue23().split(",");
+        for (String data : marketRevArr) {
+            forecastRevMarket.add(Double.parseDouble(data));
+        }
+
+        String[] marketShareArr = forecastData.getMarketShare23().split(",");
+        for (String data : marketShareArr) {
+            forecastMarketShare.add(Double.parseDouble(data));
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("company", company);
+        model.addAttribute("forecastRevComp", forecastRevComp);
+        model.addAttribute("forecastRevMarket", forecastRevMarket);
+        model.addAttribute("forecastMarketShare", forecastMarketShare);
+        return "forecast";
     }
 }

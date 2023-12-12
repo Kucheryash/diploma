@@ -49,6 +49,7 @@ public class StrategicPlanService {
         plan.setDate(date);
         plan.setDescription(strategicPlan(companyData.getRevenue22(), companyData.getEmployees22(), avgRev, avgEmp));
         plan.setCompany(companyData.getCompany());
+        plan.setStatus("создан");
         return plan;
     }
 

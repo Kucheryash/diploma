@@ -13,8 +13,8 @@
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="/styles/style.css">
-    <script src="../styles/script.js"></script>
+    <link rel="stylesheet" href="../static/styles/style.css">
+    <script src="../static/styles/script.js"></script>
 
 </head>
 
@@ -22,11 +22,12 @@
 <header th:insert="~{fragments/header :: header}"></header>
 <button onclick="topFunction()" id="topBtn" title="Go to top"><i class="bi bi-chevron-up"></i></button>
 
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <section class="text-center font-cyrillic p-section" style="background-color: #2d3142">
     <h1 class="text-center" style="color: white; font-weight: bold">Анализ IT-рынка</h1>
 </section>
 <section class="text-center" style="margin-top: 70px">
-    <img src="../images/logo.png" alt="Logo" width="80" height="80">
+    <img src="/static/images/logo.png" alt="Logo" width="80" height="80">
 </section>
 
 <div class="font-cyrillic p-section" style="padding-top: 70px">

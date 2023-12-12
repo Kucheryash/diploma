@@ -44,5 +44,4 @@ public class SWOTController {
         model.addAttribute("swot", swot);
         return "swot";
     }
-
 }

@@ -1,5 +1,6 @@
 package project.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,10 +31,10 @@ public class UserController {
     ForecastService forecastService;
 
     @GetMapping("/account/{id}")
-    public String account(Model model, @PathVariable("id") long id_user, @ModelAttribute("companyData") CompanyData companyData){
+    public String account(Model model, @PathVariable("id") long id_user, @ModelAttribute("companyData") CompanyData companyData, HttpSession session){
         User user = userService.get(id_user);
         if (user.getRole().contains(Role.ROLE_SPEC))
-            return "redirect:/specialist";
+            return "redirect:/specialist/"+user.getId();
 
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
@@ -51,8 +52,7 @@ public class UserController {
         Company company = companyService.fingByBA(id_user);
         CompanyData data = dataService.findByCompanyId(company.getId());
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
-        model.addAttribute("user", user);
-        model.addAttribute("company", company);
+
         if (data != null && competitiveness != null) {
             SWOT swot = swotService.findByCompany(company);
             ForecastData forecastData = forecastService.findByCompanyData(companyData);
@@ -61,8 +61,8 @@ public class UserController {
             List<Double> forecastMarketShare = new ArrayList<>();
             if (forecastData == null) {
                 forecastRevComp = forecastService.makeForecastRevCompany(competitiveness);
-                forecastRevMarket = forecastService.makeForecastRevMarket();
-                forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness);
+                forecastRevMarket = forecastService.makeForecastRevMarket(companyData);
+                forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness, companyData);
                 forecastService.createForecast(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
             } else{
                 String[] compRevArr = forecastData.getCompRevenue23().split(",");
@@ -81,6 +81,20 @@ public class UserController {
                 }
             }
             StrategicPlan plan = planService.findByCompany(company);
+
+            String status = swot.getStatus();
+            if (status.equals("заявка"))
+                model.addAttribute("status", "<Заявка специалисту отправлена>");
+            else if (status.equals("изменено"))
+                model.addAttribute("status", "<Данные обновлены>");
+            else
+                model.addAttribute("status", "");
+
+            String successMessage = (String) session.getAttribute("successMessage");
+            session.removeAttribute("successMessage");
+
+            model.addAttribute("user", user);
+            model.addAttribute("company", company);
             model.addAttribute("analysis", "Погнали");
             model.addAttribute("companyData", data);
             model.addAttribute("swot", swot);
@@ -89,6 +103,7 @@ public class UserController {
             model.addAttribute("forecastRevMarket", forecastRevMarket);
             model.addAttribute("forecastMarketShare", forecastMarketShare);
             model.addAttribute("plan", plan);
+            model.addAttribute("successMessage", successMessage);
         }
         return "account";
     }
@@ -120,7 +135,7 @@ public class UserController {
     }
 
     @PostMapping("/send-email/{id}")
-    public String email(Model model, @PathVariable("id") Long id) {
+    public String email(HttpSession session, @PathVariable("id") Long id) {
         Company company = companyService.fingByBA(id);
 
         SWOT swot = swotService.findByCompany(company);
@@ -130,9 +145,26 @@ public class UserController {
         plan.setStatus("заявка");
         planService.save(plan);
 
-        //userService.sendEmail(company.getName());
+        userService.sendEmail(company.getName());
 
-        model.addAttribute("successMessage", "Отправлено");
+        session.setAttribute("successMessage", "Отправлено");
         return "redirect:/analysis/"+id+"/"+company.getId();
+    }
+
+    @PostMapping("/account/send-email/{id}")
+    public String emailFromAcc(HttpSession session, @PathVariable("id") Long id) {
+        Company company = companyService.fingByBA(id);
+
+        SWOT swot = swotService.findByCompany(company);
+        swot.setStatus("заявка");
+        swotService.save(swot);
+        StrategicPlan plan = planService.findByCompany(company);
+        plan.setStatus("заявка");
+        planService.save(plan);
+
+        userService.sendEmail(company.getName());
+
+        session.setAttribute("successMessage", "Отправлено");
+        return "redirect:/account/"+id;
     }
 }

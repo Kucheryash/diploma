@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 public class ForecastService {
     @Autowired
     ForecastRepository repo;
-    @Autowired
-    CompetitorsRepository repoCompetitors;
 
     @Autowired
     CompanyDataService companyDataService;
+    @Autowired
+    CompetitorsService competitorsService;
 
     public void createForecast(List<Double> forecastRevComp, List<Double> forecastRevMarket, List<Double> forecastMarketShare, CompanyData companyData){
         String revCompAsString = forecastRevComp.stream()
@@ -60,9 +60,9 @@ public class ForecastService {
         return monthRevenue(competitiveness.getRevenue(), competitiveness.getRevenueGrowth());
     }
 
-    public List<Double> makeForecastMarketShare(Competitiveness competitiveness) {
+    public List<Double> makeForecastMarketShare(Competitiveness competitiveness, CompanyData companyData) {
         List<Double> monthRev = monthRevenue(competitiveness.getRevenue(), competitiveness.getRevenueGrowth());
-        double sumMarketRevenue = summaryMarketRev()/12;
+        double sumMarketRevenue = summaryMarketRev(companyData)/12;
 
         List<Double> marketShareList = new ArrayList<>();
         for (Double value : monthRev) {
@@ -73,16 +73,19 @@ public class ForecastService {
         return marketShareList;
     }
 
-    public List<Double> makeForecastRevMarket(){
-        List<Object> marketRevenues = repoCompetitors.findRevenue22Values();
-        double sumMarketRevenue = summaryMarketRev();
+    public List<Double> makeForecastRevMarket(CompanyData companyData){
+        List<Object[]> marketRevenues = competitorsService.getRevenue22ValuesByActivity(companyData.getActivity());
+        double sumMarketRevenue = summaryMarketRev(companyData);
         double revenueMarket = sumMarketRevenue/marketRevenues.size();
 
-        List<Object> marketGrowths = repoCompetitors.findRevenueGrowthValues();
+        List<Object[]> marketGrowths = competitorsService.getRevenueGrowthValuesByActivity(companyData.getActivity());
         double sumMarketGrowthRev = 0;
-        for (Object growth : marketGrowths) {
-            if (growth instanceof Number) {
-                sumMarketGrowthRev += ((Number) growth).doubleValue();
+        for (Object[] growthArray : marketGrowths) {
+            if (growthArray != null && growthArray.length > 0) {
+                Object growth = growthArray[0];
+                if (growth instanceof Number) {
+                    sumMarketGrowthRev += ((Number) growth).doubleValue();
+                }
             }
         }
         double revenueGrowthMarket = sumMarketGrowthRev/marketGrowths.size();
@@ -90,12 +93,15 @@ public class ForecastService {
         return monthRevenue(revenueMarket, revenueGrowthMarket);
     }
 
-    public double summaryMarketRev(){
-        List<Object> marketRevenues = repoCompetitors.findRevenue22Values();
+    public double summaryMarketRev(CompanyData companyData){
+        List<Object[]> marketRevenues = competitorsService.getRevenue22ValuesByActivity(companyData.getActivity());
         double sumMarketRevenue = 0;
-        for (Object revenue : marketRevenues) {
-            if (revenue instanceof Number) {
-                sumMarketRevenue += ((Number) revenue).doubleValue();
+        for (Object[] revenueArray : marketRevenues) {
+            if (revenueArray != null && revenueArray.length > 0) {
+                Object revenue = revenueArray[0];
+                if (revenue instanceof Number) {
+                    sumMarketRevenue += ((Number) revenue).doubleValue();
+                }
             }
         }
         return sumMarketRevenue;
@@ -121,7 +127,6 @@ public class ForecastService {
 
         return revenuePerMonth;
     }
-
 
     public ForecastData findByCompanyData(CompanyData companyData) {
         return repo.findByData(companyData);

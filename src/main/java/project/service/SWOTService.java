@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Company;
+import project.entity.CompanyData;
 import project.entity.Competitors;
 import project.entity.SWOT;
 import project.repository.SWOTRepository;
@@ -20,9 +21,12 @@ public class SWOTService {
 
     @Autowired
     CompetitorsService competitorsService;
+    @Autowired
+    CompanyDataService companyDataService;
 
     public SWOT SWOTAnalysis(int revenue, int num_of_employees, Company company){
-        List<Object[]> competitors = competitorsService.getRevAndEmpNotNull();
+        CompanyData companyData = companyDataService.findByCompanyId(company.getId());
+        List<Object[]> competitors = competitorsService.getRevAndEmpNotNullByActivity(companyData.getActivity());
         List<Integer> revenueList = new ArrayList<>();
         List<Integer> employeeCountList = new ArrayList<>();
 
@@ -118,7 +122,7 @@ public class SWOTService {
         String threats = "";
 
         if (profit<market_profit && employeeCount>market_employee)
-            threats += "Финансовым затруднения (отсутствие средств для оплаты зарплат или инвестиций в развитие).\n Потеря клиентов.\n";
+            threats += "Финансовое затруднение (отсутствие средств для оплаты зарплат или инвестиций в развитие).\n Потеря клиентов.\n";
         else
             threats += "Перегрузка работы. Ограниченное количество сотрудников может не справиться с растущим объемом работы.\n";
 

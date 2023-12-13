@@ -71,7 +71,7 @@ public class UserService {
     private String username;
     public void sendEmail(String comp_name) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        String emailTo = "julaymyak@gmail.com";
+        String emailTo = "julaymyak12@gmail.com";
         String subject = "Редактировать анализ компании '"+comp_name+"'.";
         String message = "С нетерпением жду взгялда специалиста!";
 

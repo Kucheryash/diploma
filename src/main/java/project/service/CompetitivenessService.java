@@ -24,8 +24,6 @@ import java.util.List;
 public class CompetitivenessService {
     @Autowired
     CompetitivenessRepository repo;
-    @Autowired
-    CompetitorsRepository repoCompetitors;
 
     @Autowired
     CompanyDataService companyDataService;
@@ -35,40 +33,38 @@ public class CompetitivenessService {
     StrategicPlanService planService;
     @Autowired
     ChartService chartService;
+    @Autowired
+    CompetitorsService competitorsService;
 
     public Competitiveness makeAnalisys(Company company){
-        List<Object> marketRevenues = repoCompetitors.findRevenue22Values();
         CompanyData companyData = companyDataService.findByCompanyId(company.getId());
-
         Competitiveness competitiveness = new Competitiveness();
         competitiveness.setRevenue(companyData.getRevenue22());
         competitiveness.setEmployees(companyData.getEmployees22());
         competitiveness.setActivity(companyData.getActivity());
         competitiveness.setCompany(company);
-
         double revenueGrowth = ((double) (companyData.getRevenue22()-companyData.getRevenue21()) /companyData.getRevenue22())*100;
         double profitability = ((double) companyData.getProfit22()/companyData.getRevenue22())*100;
-
-        double sumMarkerRevenue = summaryMarketRev();
+        double sumMarkerRevenue = summaryMarketRev(companyData);
         double marketShare = (companyData.getRevenue22()/sumMarkerRevenue)*100;
-
         Date date = Date.valueOf(java.time.LocalDate.now());
         competitiveness.setDate(date);
         competitiveness.setRevenueGrowth(Math.round(revenueGrowth * 10) / 10.0);
         competitiveness.setProfitability(Math.round(profitability * 10) / 10.0);
         competitiveness.setMarketShare(Math.round(marketShare * 10) / 10.0);
-
         save(competitiveness);
-
         return competitiveness;
     }
 
-    public double summaryMarketRev(){
-        List<Object> marketRevenues = repoCompetitors.findRevenue22Values();
+    public double summaryMarketRev(CompanyData companyData){
+        List<Object[]> marketRevenues = competitorsService.getRevenue22ValuesByActivity(companyData.getActivity());
         double sumMarketRevenue = 0;
-        for (Object revenue : marketRevenues) {
-            if (revenue instanceof Number) {
-                sumMarketRevenue += ((Number) revenue).doubleValue();
+        for (Object[] revenueArray : marketRevenues) {
+            if (revenueArray != null && revenueArray.length > 0) {
+                Object revenue = revenueArray[0];
+                if (revenue instanceof Number) {
+                    sumMarketRevenue += ((Number) revenue).doubleValue();
+                }
             }
         }
         return sumMarketRevenue;
@@ -80,16 +76,11 @@ public class CompetitivenessService {
         Competitiveness competitiveness = findByCompany(company);
         StrategicPlan plan = planService.findByCompany(company);
         String docName = "Отчет компании '" + company.getName() + "'";
-
         Charts charts = chartService.findByCompanyData(companyData);
         String revCompPath = charts.getRevenuePath();
         String marketSharePath = charts.getMarketSharePath();
-
-        // Читаем шаблонный файл
         File templateFile = new File("D:\\Учёба\\7 семестр\\Курсовая работа\\template.docx");
         XWPFDocument newDoc = new XWPFDocument(new FileInputStream(templateFile));
-
-        // Заменяем переменные в документе на значения
         replaceVariable(newDoc, "${companyName}", company.getName());
         replaceVariable(newDoc, "${industry}", companyData.getActivity());
         replaceVariable(newDoc, "${analysisDate}", String.valueOf(companyData.getDate()));
@@ -105,11 +96,8 @@ public class CompetitivenessService {
         insertChartImage(newDoc, "${revCompChart}", new File(revCompPath));
         insertChartImage(newDoc, "${marketShareChart}", new File(marketSharePath));
         replaceVariable(newDoc, "${recommendations}", plan.getDescription());
-
         String absolutePath = "";
         absolutePath = findAbsolutePathInDirectory("D:\\", directoryPath);
-
-        // Создание директории, если она не существует
         File directory = null;
         if (absolutePath != null) {
             directory = new File(absolutePath);
@@ -117,11 +105,7 @@ public class CompetitivenessService {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-
-        // Путь и имя файла для сохранения отчета
         String filePath = absolutePath + File.separator + docName + ".docx";
-
-        // Сохранение документа
         FileOutputStream out = new FileOutputStream(filePath);
         newDoc.write(out);
         out.close();
@@ -130,19 +114,13 @@ public class CompetitivenessService {
 
     private void replaceVariable(XWPFDocument doc, String variable, String value) {
         List<XWPFParagraph> paragraphs = doc.getParagraphs();
-        // Вставка данных в параграфы
         for (XWPFParagraph paragraph : paragraphs) {
             String text = paragraph.getText();
             if (text.contains(variable)) {
-                // Заменяем переменную на значение
                 String replacedText = text.replace(variable, value);
-
-                // Удаляем все старые раны (текстовые части) из параграфа
                 while (paragraph.getRuns().size() > 0) {
                     paragraph.removeRun(0);
                 }
-
-                // Создаем новую рану и устанавливаем в нее измененный текст
                 XWPFRun newRun = paragraph.createRun();
                 newRun.setText(replacedText);
             }
@@ -150,23 +128,16 @@ public class CompetitivenessService {
     }
 
     private void replaceVariableTable(XWPFDocument doc, String variable, String value) {
-        // Получение таблицы из документа (предполагается, что таблица находится на первой странице)
         XWPFTable table = doc.getTables().get(0);
-
-        // Обход строк таблицы (начиная со второй строки, так как первая строка - заголовки столбцов)
         for (int row = 1; row < table.getNumberOfRows(); row++) {
             XWPFTableRow tableRow = table.getRow(row);
-
-            // Обход ячеек в строке
             for (int col = 0; col < tableRow.getTableCells().size(); col++) {
                 XWPFTableCell cell = tableRow.getCell(col);
                 String cellText = cell.getText();
-
                 if (cellText.contains(variable)) {
-                    // Замена заполнителей переменных в ячейке
                     cellText = cellText.replace(variable, value);
-                    cell.removeParagraph(0); // Удаление исходного текста ячейки
-                    cell.setText(cellText); // Вставка нового текста
+                    cell.removeParagraph(0);
+                    cell.setText(cellText);
                 }
             }
         }
@@ -175,30 +146,20 @@ public class CompetitivenessService {
     private void insertChartImage(XWPFDocument doc, String variable, File imageFile) throws IOException, InvalidFormatException {
         for (XWPFParagraph paragraph : doc.getParagraphs()) {
             List<XWPFRun> runs = paragraph.getRuns();
-
             if (runs.size() > 0) {
                 StringBuilder fullText = new StringBuilder();
                 for (XWPFRun run : runs) {
                     fullText.append(run.getText(0));
                 }
-
                 String text = fullText.toString();
                 int variableIndex = text.indexOf(variable);
-
                 if (variableIndex != -1) {
-                    // Удаляем переменную из текста параграфа
                     text = text.substring(0, variableIndex) + text.substring(variableIndex + variable.length());
-
-                    // Очищаем параграф от существующих run
                     for (int i = runs.size() - 1; i >= 0; i--) {
                         paragraph.removeRun(i);
                     }
-
-                    // Вставляем обновленный текст без переменной
                     XWPFRun newRun = paragraph.createRun();
                     newRun.setText(text);
-
-                    // Вставляем картинку
                     XWPFRun runImage = paragraph.createRun();
                     InputStream imageStream = new FileInputStream(imageFile);
                     runImage.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, imageFile.getName(), Units.toEMU(400), Units.toEMU(300));
@@ -207,7 +168,6 @@ public class CompetitivenessService {
             }
         }
     }
-
 
     public Competitiveness findByCompany(Company company) {
         return repo.findByCompany(company);
@@ -220,7 +180,6 @@ public class CompetitivenessService {
     public Competitiveness get(Long id) {
         return repo.findById(id).get();
     }
-
 
     private static String findAbsolutePathInDirectory(String directoryPath, String directoryName) {
         File[] files = new File(directoryPath).listFiles();
@@ -239,13 +198,4 @@ public class CompetitivenessService {
         }
         return null;
     }
-
-    private String saveChartImage(MultipartFile chartImage, String filename) throws IOException {
-        // Сохранение изображения на диск
-        byte[] bytes = chartImage.getBytes();
-        Path path = Paths.get("D:\\Учёба\\7 семестр\\Курсовая работа\\Графики\\", filename);
-        Files.write(path, bytes);
-        return path.toString();
-    }
-
 }

@@ -122,27 +122,36 @@ public class CompanyController {
         if (companyData == null)
             return "redirect:/analysis/"+user.getId()+"/"+id_company;
 
+        Competitiveness competitiveness = competitivenessService.findByCompany(company);
         ForecastData forecastData = forecastService.findByCompanyData(companyData);
         List<Double> forecastRevComp = new ArrayList<>();
         List<Double> forecastRevMarket = new ArrayList<>();
         List<Double> forecastMarketShare = new ArrayList<>();
-        String[] compRevArr = forecastData.getCompRevenue23().split(",");
-        for (String data : compRevArr) {
-            forecastRevComp.add(Double.parseDouble(data));
-        }
+        if (forecastData == null) {
+            forecastRevComp = forecastService.makeForecastRevCompany(competitiveness);
+            forecastRevMarket = forecastService.makeForecastRevMarket(companyData);
+            forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness, companyData);
+            forecastService.createForecast(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
+        } else {
+            String[] compRevArr = forecastData.getCompRevenue23().split(",");
+            for (String s : compRevArr) {
+                forecastRevComp.add(Double.parseDouble(s));
+            }
 
-        String[] marketRevArr = forecastData.getMarketRevenue23().split(",");
-        for (String data : marketRevArr) {
-            forecastRevMarket.add(Double.parseDouble(data));
-        }
+            String[] marketRevArr = forecastData.getMarketRevenue23().split(",");
+            for (String s : marketRevArr) {
+                forecastRevMarket.add(Double.parseDouble(s));
+            }
 
-        String[] marketShareArr = forecastData.getMarketShare23().split(",");
-        for (String data : marketShareArr) {
-            forecastMarketShare.add(Double.parseDouble(data));
+            String[] marketShareArr = forecastData.getMarketShare23().split(",");
+            for (String s : marketShareArr) {
+                forecastMarketShare.add(Double.parseDouble(s));
+            }
         }
 
         model.addAttribute("user", user);
         model.addAttribute("company", company);
+        model.addAttribute("competitivenessList", competitiveness);
         model.addAttribute("forecastRevComp", forecastRevComp);
         model.addAttribute("forecastRevMarket", forecastRevMarket);
         model.addAttribute("forecastMarketShare", forecastMarketShare);

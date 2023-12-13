@@ -151,7 +151,7 @@
         </section>
         <section class="p-section align-items-center" style="padding-top: 50px">
             <div style="padding-left: 300px; padding-right: 300px">
-                <h5 class="font-cyrillic" th:inline="text" th:text="${plan.getDescription()}"></h5>
+                <h5 class="font-cyrillic" th:inline="text" th:each="description : ${plan.getDescription().split('\n')}" th:text="${description}" style="text-align: justify; text-indent: 2em;"></h5>
             </div>
         </section>
     </div>
@@ -199,16 +199,15 @@
         </div>
     </section>
 
-    <script th:if="${successMessage}">
+    <script th:if="${successMessage == 'Отправлено'}">
         window.onload = function() {
             showNotification();
         };
     </script>
-    <div id="notification" class="font-cyrillic" style="display: none; width: 350px; height: 250px">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div id="notification" class="font-cyrillic" style="display: none; width: 320px; height: 180px">
         <br/>
         <h5>Заявка успешно отправлена!</h5>
-        <br/><br/>
+        <br/>
         <button class="btn btn-lg btn-light btn-orange" onclick="closeNotification()">Ок</button>
     </div>
 </div>

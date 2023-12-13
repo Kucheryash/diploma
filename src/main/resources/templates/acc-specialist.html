@@ -31,10 +31,10 @@
         <span class="text-capitalize" th:text="${user.getFirstname()}">Имя</span>!
     </h1>
 </section>
-<section class="text-center" style="margin-top: 100px">
+<section class="text-center" style="margin-top: 50px">
     <img src="../images/logo.png" alt="Logo" width="80" height="80">
 </section>
-<section class="font-cyrillic p-section align-items-center">
+<section class="font-cyrillic p-section align-items-center" style="padding-top: 50px">
     <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px">
         <a id="reqButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Заявки<i id="reqIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
         <div id="reqContent" class="section-content container text-center">
@@ -42,9 +42,9 @@
             <ul style="list-style-position: inside; padding-left: 0;">
                 <li th:each="company : ${companyList}">
                     <div style="min-width: 250px; display: inline-block; text-align: left">
-                        <span th:text="${company.getName()}"></span>
+                        <span style="font-size: 18px" th:text="${company.getName()}"></span>
                     </div>
-                    <a th:href="@{/edit-comp-spec/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}" class="btn btn-light btn-orange">Просмотреть</a>
+                    <a th:href="@{/edit-comp-spec/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}" class="btn btn-light btn-orange" style="margin: 5px">Просмотреть</a>
                     <br/>
                 </li>
             </ul>

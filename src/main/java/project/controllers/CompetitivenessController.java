@@ -1,5 +1,6 @@
 package project.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,7 @@ public class CompetitivenessController {
     ForecastService forecastService;
 
     @RequestMapping(value = "/analysis/{idu}/{idc}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String analysis(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company) {
+    public String analysis(Model model, @PathVariable("idu") long id_user, @PathVariable("idc") long id_company/*, @ModelAttribute("successMessage") String successMessage*/, HttpSession session) {
         Company company = companyService.get(id_company);
         User user = userService.get(id_user);
         CompanyData companyData = companyDataService.findByCompanyId(id_company);
@@ -56,8 +57,8 @@ public class CompetitivenessController {
         List<Double> forecastMarketShare = new ArrayList<>();
         if (forecastData == null) {
             forecastRevComp = forecastService.makeForecastRevCompany(competitiveness);
-            forecastRevMarket = forecastService.makeForecastRevMarket();
-            forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness);
+            forecastRevMarket = forecastService.makeForecastRevMarket(companyData);
+            forecastMarketShare = forecastService.makeForecastMarketShare(competitiveness, companyData);
             forecastService.createForecast(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
         } else{
             String[] compRevArr = forecastData.getCompRevenue23().split(",");
@@ -94,6 +95,9 @@ public class CompetitivenessController {
         else
             model.addAttribute("status", "");
 
+        String successMessage = (String) session.getAttribute("successMessage");
+        session.removeAttribute("successMessage");
+
         model.addAttribute("user", user);
         model.addAttribute("swot", swot);
         model.addAttribute("company", company);
@@ -102,6 +106,7 @@ public class CompetitivenessController {
         model.addAttribute("forecastRevComp", forecastRevComp);
         model.addAttribute("forecastRevMarket", forecastRevMarket);
         model.addAttribute("forecastMarketShare", forecastMarketShare);
+        model.addAttribute("successMessage", successMessage);
         model.addAttribute("plan", plan);
         return "competitiveness";
     }
@@ -114,5 +119,4 @@ public class CompetitivenessController {
 
         return "redirect:/analysis/" + company.getUser().getId() + "/" + id_company;
     }
-
 }

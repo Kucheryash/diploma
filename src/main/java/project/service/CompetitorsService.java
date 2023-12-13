@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.entity.Competitors;
 import project.repository.CompetitorsRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +19,35 @@ public class CompetitorsService {
         return repo.findAllNotNullFields();
     }
 
+    public List<Object[]> getRevAndEmpNotNullByActivity(String activity){
+        String[] activityArray = activity.split(",");
+        List<Object[]> resultList = new ArrayList<>();
+        for (String singleActivity : activityArray) {
+            List<Object[]> activityResult = repo.findAllNotNullFieldsByActivity(singleActivity.trim());
+            resultList.addAll(activityResult);
+        }
+        return resultList;
+    }
+
+    public List<Object[]> getRevenue22ValuesByActivity(String activity){
+        String[] activityArray = activity.split(",");
+        List<Object[]> resultList = new ArrayList<>();
+        for (String singleActivity : activityArray) {
+            List<Object[]> activityResult = repo.findRevenue22ValuesByActivity(singleActivity.trim());
+            resultList.addAll(activityResult);
+        }
+        return resultList;
+    }
+
+    public List<Object[]> getRevenueGrowthValuesByActivity(String activity){
+        String[] activityArray = activity.split(",");
+        List<Object[]> resultList = new ArrayList<>();
+        for (String singleActivity : activityArray) {
+            List<Object[]> activityResult = repo.findRevenueGrowthValuesByActivity(singleActivity.trim());
+            resultList.addAll(activityResult);
+        }
+        return resultList;
+    }
 //    public List<Market> getListFromExcel(){
 //        String excelFile = "D:\\Учёба\\7 семестр\\Курсовая работа\\market.xlsx";
 //        List<Market> dataList = new ArrayList<>();

@@ -34,10 +34,10 @@
         </h1>
         <a class="p-header" style="margin: 0; color: #f2f2f2">Редактировать личные данные</a>
     </section>
-    <section class="text-center" style="margin-top: 100px">
+    <section class="text-center" style="margin-top: 50px">
         <img src="../images/logo.png" alt="Logo" width="80" height="80">
     </section>
-    <section class="font-cyrillic p-section" style="padding-top: 70px" th:if="${companyData.getCompany()!=company}">
+    <section class="font-cyrillic p-section" style="padding-top: 50px" th:if="${companyData.getCompany()!=company}">
         <h2 class="text-center">Заполните данные компании "<span th:text="${company.getName()}">Название компании</span>"</h2>
         <h2 class="text-center">для дальнейшей работы.</h2>
         <br/>
@@ -49,10 +49,12 @@
             </form>
         </div>
     </section>
-    <section class="font-cyrillic p-section align-items-center" th:if="${companyData.getCompany()==company}">
+    <section class="font-cyrillic p-section align-items-center" th:if="${companyData.getCompany()==company}" style="padding-top: 50px">
     <h2 class="text-center">Анализ конкурентоспособности компании "
         <span class="text-capitalize" th:text="${company.getName()}">Название компании</span>"
     </h2>
+        <br/>
+        <p class="text-center" th:inline="text" th:text="${status}" style="color: #D4B5A7"></p>
     <br/>
     <form class="text-center" method="post" th:object="${analysis}" th:if="${analysis==null}" th:action="@{/analysis/{idu}/{idc}(idu=${user.getId()}, idc=${company.getId()})}">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -92,7 +94,7 @@
             <a id="competitorButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Анализ конкурентоспособности<i id="competitorIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
             <div id="competitorContent" class="section-content container">
                 <br/>
-                <div style="padding-left: 300px; padding-right: 300px">
+                <div style="padding-left: 200px; padding-right: 200px">
                     <table>
                         <tr style="background-color: #f2f2f2; border: 2px solid white">
                             <th>Выручка компании, USD</th>
@@ -114,10 +116,10 @@
                 </div>
                 <br/>
                 <div class="row d-flex align-items-center justify-content-center" style="padding-left: 200px; padding-right: 200px; margin: 0">
-                    <div class="col d-flex align-items-center justify-content-center">
+                    <div class="col d-flex align-items-center justify-content-center" style="background-color: white">
                         <canvas id="revCompChart" width="400" height="350"></canvas>
                     </div>
-                    <div class="col d-flex align-items-center justify-content-center">
+                    <div class="col d-flex align-items-center justify-content-center" style="background-color: white">
                         <canvas id="marketShareChart" width="400" height="350"></canvas>
                     </div>
                     <script>
@@ -134,11 +136,33 @@
             <a id="planButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Рекомендации к стратегическому плану<i id="planIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
             <div id="planContent" class="section-content container" style="padding-left: 200px; padding-right: 200px">
                 <br/>
-                <h5 class="font-cyrillic" th:inline="text" th:text="${plan.getDescription()}"></h5>
+                <h5 class="font-cyrillic" th:inline="text" th:each="description : ${plan.getDescription().split('\n')}" th:text="${description}" style="text-align: justify; text-indent: 2em;"></h5>
             </div>
         </div>
+        <br/>
+        <div style="background-color: #f2f2f2; padding-top: 20px; padding-bottom: 20px">
+            <a id="mailButton" class="btn btn-link p-header" style="font-size: 24px; display: flex; align-items: center; justify-content: center">Заявка специалисту<i id="mailIcon" class="bi bi-chevron-compact-down" style="margin-left: 5px"></i></a>
+            <div id="mailContent" class="section-content container" style="padding-left: 200px; padding-right: 200px; display: flex; align-items: center; justify-content: center">
+                <form method="post" th:action="@{/account/send-email/{id}(id=${user.getId()})}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <br/>
+                    <button class="btn btn-lg btn-light btn-orange" style="width: 150px" type="submit">Отправить</button>
+                </form>
+            </div>
+        </div>
+        <script th:if="${successMessage == 'Отправлено'}">
+            window.onload = function() {
+                showNotification();
+            };
+        </script>
+        <div id="notification" class="font-cyrillic" style="display: none; width: 320px; height: 180px">
+            <br/>
+            <h5>Заявка успешно отправлена!</h5>
+            <br/>
+            <button class="btn btn-lg btn-light btn-orange" onclick="closeNotification()">Ок</button>
+        </div>
     </div>
-    </section>
+</section>
 </div>
 </div>
 <footer th:insert="~{fragments/footer :: footer}"></footer>

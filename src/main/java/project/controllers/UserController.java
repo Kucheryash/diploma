@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.entity.*;
-import project.entity.enums.Role;
-import project.service.*;
+import project.entities.*;
+import project.entities.enums.Role;
+import project.services.*;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -36,6 +36,8 @@ public class UserController {
         if (user.getRole().contains(Role.ROLE_SPEC))
             return "redirect:/specialist/"+user.getId();
 
+        model.addAttribute("user", user);
+
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
         String greeting;
@@ -52,6 +54,8 @@ public class UserController {
         Company company = companyService.fingByBA(id_user);
         CompanyData data = dataService.findByCompanyId(company.getId());
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
+
+        model.addAttribute("company", company);
 
         if (data != null && competitiveness != null) {
             SWOT swot = swotService.findByCompany(company);
@@ -93,8 +97,6 @@ public class UserController {
             String successMessage = (String) session.getAttribute("successMessage");
             session.removeAttribute("successMessage");
 
-            model.addAttribute("user", user);
-            model.addAttribute("company", company);
             model.addAttribute("analysis", "Погнали");
             model.addAttribute("companyData", data);
             model.addAttribute("swot", swot);

@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import project.entity.Company;
-import project.entity.User;
-import project.entity.enums.Role;
-import project.service.CompanyService;
-import project.service.UserService;
+import project.entities.Company;
+import project.entities.User;
+import project.entities.enums.Role;
+import project.services.CompanyService;
+import project.services.UserService;
 
 import java.util.Collections;
 

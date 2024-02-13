@@ -1,13 +1,11 @@
 package project.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import project.entity.*;
-import project.service.*;
+import project.entities.*;
+import project.services.*;
 
 import java.sql.Date;
 import java.util.ArrayList;

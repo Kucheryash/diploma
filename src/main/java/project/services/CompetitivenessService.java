@@ -74,7 +74,7 @@ public class CompetitivenessService {
         Charts charts = chartService.findByCompanyData(companyData);
         String revCompPath = charts.getRevenuePath();
         String marketSharePath = charts.getMarketSharePath();
-        File templateFile = new File("D:\\Учёба\\7 семестр\\Курсовая работа\\template.docx");
+        File templateFile = new File("D:\\Учёба\\4 курс\\8 семестр\\Диплом\\template.docx");
         XWPFDocument newDoc = new XWPFDocument(new FileInputStream(templateFile));
         replaceVariable(newDoc, "${companyName}", company.getName());
         replaceVariable(newDoc, "${industry}", companyData.getActivity());
@@ -100,14 +100,22 @@ public class CompetitivenessService {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String filePath = absolutePath + File.separator + docName + ".docx";
-        FileOutputStream out = new FileOutputStream(filePath);
-        newDoc.write(out);
-        out.close();
 
+        String filePath = absolutePath + File.separator + docName + ".docx";
+
+        saveDocument(newDoc, filePath);
+//        FileOutputStream out = new FileOutputStream(filePath);
+//        newDoc.write(out);
+//        out.close();
     }
 
-    private void replaceVariable(XWPFDocument doc, String variable, String value) {
+    public void saveDocument(XWPFDocument document, String filePath) throws IOException {
+        FileOutputStream out = new FileOutputStream(filePath);
+        document.write(out);
+        out.close();
+    }
+
+    public void replaceVariable(XWPFDocument doc, String variable, String value) {
         List<XWPFParagraph> paragraphs = doc.getParagraphs();
         for (XWPFParagraph paragraph : paragraphs) {
             String text = paragraph.getText();
@@ -122,7 +130,7 @@ public class CompetitivenessService {
         }
     }
 
-    private void replaceVariableTable(XWPFDocument doc, String variable, String value) {
+    public void replaceVariableTable(XWPFDocument doc, String variable, String value) {
         XWPFTable table = doc.getTables().get(0);
         for (int row = 1; row < table.getNumberOfRows(); row++) {
             XWPFTableRow tableRow = table.getRow(row);
@@ -138,7 +146,7 @@ public class CompetitivenessService {
         }
     }
 
-    private void insertChartImage(XWPFDocument doc, String variable, File imageFile) throws IOException, InvalidFormatException {
+    public void insertChartImage(XWPFDocument doc, String variable, File imageFile) throws IOException, InvalidFormatException {
         for (XWPFParagraph paragraph : doc.getParagraphs()) {
             List<XWPFRun> runs = paragraph.getRuns();
             if (runs.size() > 0) {

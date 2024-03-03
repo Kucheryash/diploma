@@ -17,12 +17,12 @@ public class CompetitorsController {
     UserService userService;
 
     @GetMapping("/market")
-    public String swot(){
+    public String market(){
         return "market";
     }
 
     @GetMapping("/market/{id}")
-    public String swot(Model model, @PathVariable("id") long id_user){
+    public String market2(Model model, @PathVariable("id") long id_user){
         User user = userService.get(id_user);
         model.addAttribute("user", user);
         return "market";

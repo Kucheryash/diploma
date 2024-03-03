@@ -73,44 +73,6 @@ public class CompanyController {
         return "add-success";
     }
 
-    @GetMapping("/edit-comp-spec/{idu}/{idc}")
-    public String editCompSpec(@PathVariable("idu") long id_user, @PathVariable("idc") long id_company, Model model){
-        Company company = companyService.get(id_company);
-
-        Competitiveness competitiveness = competitivenessService.findByCompany(company);
-        SWOT swot = swotService.findByCompany(company);
-        StrategicPlan plan = planService.findByCompany(company);
-
-        model.addAttribute("user", userService.get(id_user));
-        model.addAttribute("company", company);
-        model.addAttribute("competitivenessList", competitiveness);
-        model.addAttribute("swot", swot);
-        model.addAttribute("plan", plan);
-        return "edit-comp-spec";
-    }
-
-    @PostMapping("/update-comp-spec/{idu}/{idc}")
-    public String updateCompSpec(@PathVariable("idu") long id_user, @PathVariable("idc") long id_company, @ModelAttribute("swot") SWOT newSwot, @ModelAttribute("plan") StrategicPlan newPlan){
-        Date date = Date.valueOf(java.time.LocalDate.now());
-        Company company = companyService.get(id_company);
-
-        SWOT swot = swotService.findByCompany(company);
-        swot.setStrengths(newSwot.getStrengths());
-        swot.setWeaknesses(newSwot.getWeaknesses());
-        swot.setOpportunities(newSwot.getOpportunities());
-        swot.setThreats(newSwot.getThreats());
-        swot.setStatus("изменено");
-        swot.setDate(date);
-        swotService.save(swot);
-
-        StrategicPlan plan = planService.findByCompany(company);
-        plan.setDescription(newPlan.getDescription());
-        plan.setStatus("изменено");
-        plan.setDate(date);
-        planService.save(plan);
-        return "redirect:/specialist/"+id_user;
-    }
-
     @GetMapping("/forecast/{id}")
     public String forecast(Model model, @PathVariable("id") long id_company){
         Company company = companyService.get(id_company);
@@ -121,6 +83,9 @@ public class CompanyController {
             return "redirect:/analysis/"+user.getId()+"/"+id_company;
 
         Competitiveness competitiveness = competitivenessService.findByCompany(company);
+        if (competitiveness == null)
+            return "redirect:/analysis/"+user.getId()+"/"+id_company;
+
         ForecastData forecastData = forecastService.findByCompanyData(companyData);
         List<Double> forecastRevComp = new ArrayList<>();
         List<Double> forecastRevMarket = new ArrayList<>();

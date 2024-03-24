@@ -32,7 +32,7 @@ public class ChartService{
     CompanyDataService companyDataService;
 
     public void createCharts(List<Double> forecastRevComp, List<Double> forecastRevMarket, List<Double> forecastMarketShare, CompanyData companyData) {
-        String outputPath = "D:\\Учёба\\4 курс\\8 семестр\\Диплом\\Графики\\";
+        String outputPath = "D:\\Учёба\\Диплом\\Графики\\";
         generateLineChart(forecastRevComp, forecastRevMarket,  outputPath+"revenue_chart"+companyData.getCompany().getId()+".png");
         generateSingleLineChart(forecastMarketShare, outputPath+"market_share_chart"+companyData.getCompany().getId()+".png");
 

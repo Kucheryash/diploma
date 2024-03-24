@@ -1,25 +1,21 @@
 package project.services;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import project.entities.*;
+import project.entities.Company;
+import project.entities.CompanyData;
+import project.entities.Competitiveness;
 import project.repositories.CompetitivenessRepository;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class CompetitivenessServiceTest {
 
@@ -42,7 +38,6 @@ class CompetitivenessServiceTest {
 
     @Test
     void testMakeAnalysis() {
-        // Arrange
         long companyId = 1;
         double expectedRevenueGrowth = 10.0;
         double expectedProfitability = 15.0;
@@ -62,20 +57,14 @@ class CompetitivenessServiceTest {
         when(competitorsService.getRevenue22ValuesByActivity("Technology")).thenReturn(getMockMarketRevenues());
         when(repo.save(any(Competitiveness.class))).thenReturn(new Competitiveness());
 
-        // Act
         Competitiveness result = competitivenessService.makeAnalisys(company);
 
-        // Assert
         assertEquals(expectedRevenueGrowth, result.getRevenueGrowth());
         assertEquals(expectedProfitability, result.getProfitability());
         assertEquals(expectedMarketShare, result.getMarketShare());
-        // Add more assertions based on the expected behavior of makeAnalisys method
     }
 
     private List<Object[]> getMockMarketRevenues() {
-        // Return mock market revenues for testing
-        // Adjust the values based on your test scenario
-        // Here is an example with two market revenues
         List<Object[]> marketRevenues = new ArrayList<>();
         Object[] marketRevenue1 = {2000};
         Object[] marketRevenue2 = {1500};

@@ -11,7 +11,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -28,16 +27,13 @@ class UserServiceTest {
 
     @Test
     public void sendEmail_ShouldSendEmailWithCorrectParameters() {
-        // Arrange
         String compName = "TestCompany";
         String emailTo = "julaymyak12@gmail.com";
         String expectedSubject = "Редактировать анализ компании '" + compName + "'.";
         String expectedMessage = "С нетерпением жду взгялда специалиста!";
 
-        // Act
         userService.sendEmail(compName);
 
-        // Assert
         verify(mailSender, times(1)).send(mailMessageCaptor.capture());
         SimpleMailMessage capturedMailMessage = mailMessageCaptor.getValue();
 

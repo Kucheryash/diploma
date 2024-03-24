@@ -5,16 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.ui.Model;
 import project.entities.Company;
 import project.entities.SWOT;
 import project.entities.StrategicPlan;
 import project.services.CompanyService;
-import project.services.CompetitivenessService;
 import project.services.SWOTService;
 import project.services.StrategicPlanService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class SpecialistControllerTest {
@@ -24,10 +22,6 @@ class SpecialistControllerTest {
     private SWOTService swotService;
     @Mock
     private StrategicPlanService planService;
-    @Mock
-    private CompetitivenessService competitivenessService;
-    @Mock
-    private Model model;
 
     @InjectMocks
     private SpecialistController specialistController;
@@ -56,7 +50,7 @@ class SpecialistControllerTest {
         verify(planService, times(1)).findByCompany(company);
         verify(swotService, times(1)).save(any(SWOT.class));
         verify(planService, times(1)).save(any(StrategicPlan.class));
-        // Проверка редиректа на правильный URL
+
         assertEquals("redirect:/specialist/" + userId, result);
     }
 }

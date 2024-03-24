@@ -13,8 +13,7 @@ import project.repositories.SWOTRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +37,6 @@ class SWOTServiceTest {
 
     @Test
     void SWOTAnalysis() {
-        // Arrange
         int revenue = 1000;
         int num_of_employees = 50;
         Company company = new Company();
@@ -53,11 +51,8 @@ class SWOTServiceTest {
         when(competitorsService.getRevAndEmpNotNullByActivity(companyData.getActivity())).thenReturn(competitors);
         when(repo.save(any(SWOT.class))).thenReturn(new SWOT());
 
-        // Act
         SWOT result = swotService.SWOTAnalysis(revenue, num_of_employees, company);
 
-        // Assert
         assertEquals("создан", result.getStatus());
-        // Add more assertions based on the expected behavior of SWOTAnalysis method
     }
 }

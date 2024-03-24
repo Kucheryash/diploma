@@ -74,7 +74,7 @@ public class CompetitivenessService {
         Charts charts = chartService.findByCompanyData(companyData);
         String revCompPath = charts.getRevenuePath();
         String marketSharePath = charts.getMarketSharePath();
-        File templateFile = new File("D:\\Учёба\\4 курс\\8 семестр\\Диплом\\template.docx");
+        File templateFile = new File("D:\\Учёба\\Диплом\\template.docx");
         XWPFDocument newDoc = new XWPFDocument(new FileInputStream(templateFile));
         replaceVariable(newDoc, "${companyName}", company.getName());
         replaceVariable(newDoc, "${industry}", companyData.getActivity());

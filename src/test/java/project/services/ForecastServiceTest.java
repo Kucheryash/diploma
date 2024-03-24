@@ -12,18 +12,11 @@ import project.repositories.ForecastRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ForecastServiceTest {
     @Mock
     private ForecastRepository repo;
-
-    @Mock
-    private CompanyDataService companyDataService;
-
-    @Mock
-    private CompetitorsService competitorsService;
 
     @InjectMocks
     private ForecastService forecastService;
@@ -35,7 +28,6 @@ class ForecastServiceTest {
 
     @Test
     void testCreateForecast() {
-        // Arrange
         List<Double> forecastRevComp = new ArrayList<>();
         forecastRevComp.add(1000.0);
         forecastRevComp.add(2000.0);
@@ -51,13 +43,8 @@ class ForecastServiceTest {
         CompanyData companyData = new CompanyData();
         companyData.setActivity("IT-услуги");
 
-        // Act
         forecastService.createForecast(forecastRevComp, forecastRevMarket, forecastMarketShare, companyData);
 
-        // Assert
-        // Add assertions based on the expected behavior of createForecast method
-        // For example:
         verify(repo, times(1)).save(any(ForecastData.class));
-        // Additional assertions based on the expected behavior of the method
     }
 }
